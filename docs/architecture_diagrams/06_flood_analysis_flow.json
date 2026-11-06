@@ -1,0 +1,164 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "GeoScout - Bi-Temporal SAR Flood Inundation & Agricultural Damage Analysis",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "output": "docs/architecture_diagrams/06_flood_analysis_flow.html"
+  },
+  "lanes": [
+    { "id": "lane_radar", "label": "Radar SAR Inundation Extraction" },
+    { "id": "lane_parcels", "label": "Cadastral Intersection & Damage Metrics" },
+    { "id": "lane_reporting", "label": "Validation & Disaster Deliverables" }
+  ],
+  "phases": [
+    { "id": "p1_radar", "label": "SAR Backscatter", "fromCol": 0, "toCol": 1 },
+    { "id": "p2_parcels", "label": "Cadastral Intersection", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "p3_reports", "label": "Audit & Export", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["s1_ingest", "otsu_thresh", "speckle_filter", "cadastral_parcels", "parcel_intersect", "headline_totals", "bilingual_report", "export_deliverables"],
+  "nodes": [
+    {
+      "id": "s1_ingest",
+      "lane": "lane_radar",
+      "col": 0,
+      "type": "cloud",
+      "label": "Sentinel-1 SAR",
+      "sublabel": "Bi-temporal scene",
+      "tag": "Pre-computed data",
+      "width": 115
+    },
+    {
+      "id": "otsu_thresh",
+      "lane": "lane_radar",
+      "col": 1,
+      "type": "backend",
+      "label": "Otsu Threshold",
+      "sublabel": "-16.4 dB scatter",
+      "tag": "Classical CV",
+      "width": 115
+    },
+    {
+      "id": "speckle_filter",
+      "lane": "lane_radar",
+      "col": 2,
+      "type": "backend",
+      "label": "Morpho Speckle",
+      "sublabel": "cv2.morphologyEx",
+      "tag": "Classical CV",
+      "width": 115
+    },
+    {
+      "id": "baseline_sub",
+      "lane": "lane_radar",
+      "col": 3,
+      "type": "backend",
+      "label": "Canal Subtraction",
+      "sublabel": "Baseline water",
+      "tag": "Classical CV",
+      "width": 115
+    },
+    {
+      "id": "cadastral_parcels",
+      "lane": "lane_parcels",
+      "col": 2,
+      "type": "database",
+      "label": "Field Matrix",
+      "sublabel": "12 Punjab plots",
+      "tag": "Pre-computed data",
+      "width": 115
+    },
+    {
+      "id": "parcel_intersect",
+      "lane": "lane_parcels",
+      "col": 3,
+      "type": "backend",
+      "label": "Field Intersect",
+      "sublabel": "Bitwise water mask",
+      "tag": "Classical CV",
+      "width": 115
+    },
+    {
+      "id": "headline_totals",
+      "lane": "lane_parcels",
+      "col": 4,
+      "type": "frontend",
+      "label": "Damage Totals",
+      "sublabel": "55.2% submersion",
+      "tag": "Classical CV",
+      "width": 115
+    },
+    {
+      "id": "sen1floods_val",
+      "lane": "lane_reporting",
+      "col": 3,
+      "type": "security",
+      "label": "Sen1Floods11",
+      "sublabel": "76.4% mIoU",
+      "tag": "Unverified ref",
+      "width": 115
+    },
+    {
+      "id": "bilingual_report",
+      "lane": "lane_reporting",
+      "col": 4,
+      "type": "frontend",
+      "label": "Bilingual Audit",
+      "sublabel": "Hindi & English",
+      "tag": "Rule-based report",
+      "width": 115
+    },
+    {
+      "id": "export_deliverables",
+      "lane": "lane_reporting",
+      "col": 5,
+      "type": "external",
+      "label": "PDF & GeoJSON",
+      "sublabel": "Revenue audit",
+      "tag": "Frontend export",
+      "width": 115
+    }
+  ],
+  "edges": [
+    { "id": "e1_ingest_thresh", "from": "s1_ingest", "to": "otsu_thresh", "label": "SAR specular", "variant": "emphasis" },
+    { "id": "e2_thresh_filter", "from": "otsu_thresh", "to": "speckle_filter", "label": "binary mask", "variant": "emphasis" },
+    { "id": "e3_filter_baseline", "from": "speckle_filter", "to": "baseline_sub", "label": "noise free", "variant": "default" },
+    { "id": "e4_flood_to_parcels", "from": "speckle_filter", "to": "cadastral_parcels", "label": "flood extent", "variant": "emphasis" },
+    { "id": "e5_intersect", "from": "cadastral_parcels", "to": "parcel_intersect", "label": "parcels", "variant": "emphasis" },
+    { "id": "e6_submersion_calc", "from": "parcel_intersect", "to": "headline_totals", "label": "per-field ha", "variant": "emphasis" },
+    { "id": "e7_val_link", "from": "headline_totals", "to": "sen1floods_val", "label": "benchmark", "variant": "dashed" },
+    { "id": "e8_report_gen", "from": "headline_totals", "to": "bilingual_report", "label": "telemetry", "variant": "emphasis" },
+    { "id": "e9_export", "from": "bilingual_report", "to": "export_deliverables", "label": "print/save", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Classical SAR Inundation Extraction",
+      "items": [
+        "Sentinel-1 C-band SAR exhibits specular scattering on standing water, appearing dark",
+        "Otsu's bimodal thresholding dynamically extracts the water histogram peak (~ -16.4 dB)",
+        "Morphological opening filters typical SAR speckle noise without requiring deep learning"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Cadastral Intersection & Risk Categorization",
+      "items": [
+        "12 cadastral field boundaries are intersected with flood masks via cv2.bitwise_and",
+        "Parcels classified into Critical (>50%), Moderate (10-50%), and Safe (<10%) submersion",
+        "Headline telemetry: 26.85 ha monitored, 14.82 ha submerged (55.2% damage across Sutlej-Beas basin)"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Academic Verification & Honesty Disclosure",
+      "items": [
+        "Sen1Floods11 validation metrics (76.4% mIoU, 81.2% precision) are cited NeurIPS 2020 benchmark reference values (UNVERIFIED: no custom trained PyTorch flood checkpoint exists in repo)",
+        "Bilingual report (English & Hindi) formats data for revenue officers and state disaster officials",
+        "Multi-format export provides instant GeoJSON downloads and printable official audit PDFs"
+      ]
+    }
+  ]
+}

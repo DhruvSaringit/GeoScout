@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "GeoScout - End-to-End Query Lifecycle & API Request Flow",
+    "output": "docs/architecture_diagrams/02_query_request_flow.html",
+    "viewBox": [1180, 720],
+    "column_fit": "spread",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "participants": [
+    { "id": "analyst", "type": "external", "label": "Geospatial Analyst", "sublabel": "Browser Session" },
+    { "id": "client_ui", "type": "frontend", "label": "GeoScout UI", "sublabel": "React 19 / MainChat.jsx" },
+    { "id": "express_api", "type": "backend", "label": "Express API", "sublabel": "routes/chat.js" },
+    { "id": "storage", "type": "cloud", "label": "MinIO S3", "sublabel": "utils/minio.js :9000" },
+    { "id": "qwen_tier", "type": "backend", "label": "Qwen2.5-VL Service", "sublabel": "inference/qwen/app.py" },
+    { "id": "sam_tier", "type": "backend", "label": "SAM 3 & BERT", "sublabel": "inference/sam3/app.py" },
+    { "id": "mongo_db", "type": "database", "label": "MongoDB Store", "sublabel": "models/chat.js" }
+  ],
+  "segments": [
+    { "from": 140, "to": 270, "label": "Step 1: Ingestion & Upload" },
+    { "from": 285, "to": 435, "label": "Step 2: Dual-Stage Model Inference" },
+    { "from": 450, "to": 610, "label": "Step 3: GIS Presentation & Persist" }
+  ],
+  "messages": [
+    { "id": "m1_upload", "from": "analyst", "to": "client_ui", "y": 165, "label": "Drop GeoTIFF/PNG + Enter Prompt", "variant": "emphasis" },
+    { "id": "m2_post_chat", "from": "client_ui", "to": "express_api", "y": 198, "label": "POST /api/chat (Multer Multipart)", "variant": "emphasis" },
+    { "id": "m3_s3_put", "from": "express_api", "to": "storage", "y": 231, "label": "saveImageAndGetObjectKey()", "variant": "default" },
+    { "id": "m4_s3_key", "from": "storage", "to": "express_api", "y": 264, "label": "imageKey + Presigned URL", "variant": "return" },
+    { "id": "m5_classify", "from": "express_api", "to": "qwen_tier", "y": 305, "label": "POST /api/classify (task intent + query)", "variant": "default" },
+    { "id": "m6_classify_res", "from": "qwen_tier", "to": "express_api", "y": 340, "label": "{\"category\":\"grounding\",\"transformed_query\":\"parcels\"}", "variant": "return" },
+    { "id": "m7_sam_infer", "from": "express_api", "to": "sam_tier", "y": 375, "label": "POST /inference (transformed query + image)", "variant": "emphasis" },
+    { "id": "m8_sam_res", "from": "sam_tier", "to": "express_api", "y": 410, "label": "{\"bounding_boxes\": [...], \"response\": \"\"}", "variant": "return" },
+    { "id": "m9_persist", "from": "express_api", "to": "mongo_db", "y": 475, "label": "Chat.chats.push({ query, bboxes, metrics })", "variant": "default" },
+    { "id": "m10_stream_res", "from": "express_api", "to": "client_ui", "y": 515, "label": "SSE Stream & JSON (bounding_boxes + response)", "variant": "emphasis" },
+    { "id": "m11_inspect", "from": "client_ui", "to": "analyst", "y": 560, "label": "Render SVG Polygons + Telemetry Metrics (ha/acres)", "variant": "return" }
+  ],
+  "activations": [
+    { "participant": "client_ui", "from": 165, "to": 570, "type": "frontend" },
+    { "participant": "express_api", "from": 198, "to": 525, "type": "backend" },
+    { "participant": "storage", "from": 231, "to": 268, "type": "cloud" },
+    { "participant": "qwen_tier", "from": 305, "to": 345, "type": "backend" },
+    { "participant": "sam_tier", "from": 375, "to": 415, "type": "backend" },
+    { "participant": "mongo_db", "from": 475, "to": 505, "type": "database" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Dual-Stage Dynamic Routing",
+      "items": [
+        "Express inspects task intent returned from Qwen classification",
+        "Semantic / Caption / Binary queries stream directly from Qwen2.5-VL via Server-Sent Events",
+        "Grounding and Numeric VQA (area, count, length) route to SAM 3 on CUDA:0"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Sub-Pixel Normalization & GIS Rendering",
+      "items": [
+        "SAM 3 computes 8-point oriented bounding boxes (OBBs) using OpenCV minAreaRect",
+        "Normalized relative to image.size [0.0 - 1.0] before leaving GPU",
+        "ImageViewer dynamically scales SVG polygons across zoom and pan matrices"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Audit & Session Integrity",
+      "items": [
+        "Full conversation history, user prompts, and bounding polygon coordinates persist to MongoDB",
+        "Presigned MinIO URLs enable efficient image caching without repeated file replication"
+      ]
+    }
+  ]
+}

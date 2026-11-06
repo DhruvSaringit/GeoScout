@@ -1,0 +1,163 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "GeoScout - Multi-Stage AI Reasoning & Measurement Pipeline",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "output": "docs/architecture_diagrams/03_ai_pipeline.html"
+  },
+  "lanes": [
+    { "id": "lane_stage1", "label": "Stage 1: VLM Reasoning (Qwen2.5-VL)" },
+    { "id": "lane_stage2", "label": "Stage 2: Grounding & Seg (SAM 3)" },
+    { "id": "lane_stage3", "label": "Stage 3: Measurement (BERT + OpenCV)" }
+  ],
+  "phases": [
+    { "id": "p1_intake", "label": "Intent & Route", "fromCol": 0, "toCol": 1 },
+    { "id": "p2_segment", "label": "Mask & Filter", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "p3_measure", "label": "Scaling & Output", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["query_input", "qwen_reasoning", "task_router", "sam_prompt", "iob_filter", "nms_filter", "final_telemetry"],
+  "nodes": [
+    {
+      "id": "query_input",
+      "lane": "lane_stage1",
+      "col": 0,
+      "type": "external",
+      "label": "User Query",
+      "sublabel": "Text + scene image",
+      "width": 115
+    },
+    {
+      "id": "qwen_reasoning",
+      "lane": "lane_stage1",
+      "col": 1,
+      "type": "backend",
+      "label": "Qwen2.5-VL LoRA",
+      "sublabel": "5-way classifier",
+      "tag": "qwen_model.py",
+      "width": 115
+    },
+    {
+      "id": "task_router",
+      "lane": "lane_stage1",
+      "col": 2,
+      "type": "messagebus",
+      "label": "Task Router",
+      "sublabel": "caption | vqa | box",
+      "tag": "routes/chat.js",
+      "width": 115
+    },
+    {
+      "id": "vlm_stream_out",
+      "lane": "lane_stage1",
+      "col": 5,
+      "type": "frontend",
+      "label": "VLM Output",
+      "sublabel": "Streaming tokens",
+      "width": 115
+    },
+    {
+      "id": "sam_prompt",
+      "lane": "lane_stage2",
+      "col": 2,
+      "type": "backend",
+      "label": "SAM 3 Encoder",
+      "sublabel": "Prompt instance masks",
+      "tag": "sam3_model.py",
+      "width": 115
+    },
+    {
+      "id": "iob_filter",
+      "lane": "lane_stage2",
+      "col": 3,
+      "type": "security",
+      "label": "Semantic IoB",
+      "sublabel": "IoB > 0.5 match",
+      "tag": "calculate_iob1()",
+      "width": 115
+    },
+    {
+      "id": "nms_filter",
+      "lane": "lane_stage2",
+      "col": 4,
+      "type": "backend",
+      "label": "Rotated NMS",
+      "sublabel": "8-point OBBs",
+      "tag": "nms_8point_opencv",
+      "width": 115
+    },
+    {
+      "id": "bert_subclass",
+      "lane": "lane_stage3",
+      "col": 3,
+      "type": "backend",
+      "label": "DistilBERT",
+      "sublabel": "count / area / len",
+      "tag": "classify.py",
+      "width": 115
+    },
+    {
+      "id": "opencv_metrics",
+      "lane": "lane_stage3",
+      "col": 4,
+      "type": "backend",
+      "label": "OpenCV Metrics",
+      "sublabel": "np.count_nonzero",
+      "tag": "utils.py",
+      "width": 115
+    },
+    {
+      "id": "final_telemetry",
+      "lane": "lane_stage3",
+      "col": 5,
+      "type": "frontend",
+      "label": "GIS Telemetry",
+      "sublabel": "ha / acres / GSD",
+      "tag": "geoUnits.js",
+      "width": 115
+    }
+  ],
+  "edges": [
+    { "id": "e1_ingest", "from": "query_input", "to": "qwen_reasoning", "label": "raw query", "variant": "emphasis" },
+    { "id": "e2_route", "from": "qwen_reasoning", "to": "task_router", "label": "intent", "variant": "emphasis" },
+    { "id": "e3_vlm_branch", "from": "task_router", "to": "vlm_stream_out", "label": "caption/vqa", "variant": "dashed" },
+    { "id": "e4_sam_branch", "from": "task_router", "to": "sam_prompt", "label": "grounding", "variant": "emphasis" },
+    { "id": "e5_filter", "from": "sam_prompt", "to": "iob_filter", "label": "masks", "variant": "emphasis" },
+    { "id": "e6_nms", "from": "iob_filter", "to": "nms_filter", "label": "parcels", "variant": "emphasis" },
+    { "id": "e7_bert_route", "from": "sam_prompt", "to": "bert_subclass", "label": "numeric", "variant": "dashed" },
+    { "id": "e8_measure", "from": "bert_subclass", "to": "opencv_metrics", "label": "sub-class", "variant": "default" },
+    { "id": "e9_polygon_out", "from": "nms_filter", "to": "final_telemetry", "label": "OBBs", "variant": "emphasis" },
+    { "id": "e10_area_out", "from": "opencv_metrics", "to": "final_telemetry", "label": "pixels", "variant": "default" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Stage 1: Intent & Target Extraction",
+      "items": [
+        "Qwen2.5-VL parses open-ended user questions using strict priority classification rules",
+        "Discards imperatival verbs ('Locate', 'Count') to extract isolated target phrases (e.g., 'agricultural field parcels')",
+        "Preserves scene reasoning and chain-of-thought monologue displayed in frontend accordions"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Stage 2: Segment Anything (SAM 3)",
+      "items": [
+        "Sam3Processor generates instance segmentations with confidence thresholding (score >= 0.1)",
+        "Semantic segmentation mask cross-validates instance boundaries (Intersection-over-Bounding-Box > 0.5)",
+        "OpenCV minAreaRect derives 8-point oriented bounding boxes invariant to satellite flight angle"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Stage 3: Physical Metric Conversion",
+      "items": [
+        "Fine-tuned DistilBERT routes numeric questions into count, area, or perimeter sub-pipelines",
+        "np.count_nonzero(mask > 0) computes comprehensive pixel surface rather than single largest contour",
+        "Sensor Ground Sample Distance (GSD m/px) scales pixel areas into true physical hectares and acres"
+      ]
+    }
+  ]
+}

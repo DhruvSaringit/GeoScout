@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoScout Architecture Dossier </title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(18, 24, 38, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.15);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      padding: 40px 24px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      border-b: 1px solid var(--card-border);
+      padding-bottom: 28px;
+      margin-bottom: 36px;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-cyan {
+      background: rgba(6, 182, 212, 0.15);
+      color: #22d3ee;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 820px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease-in-out;
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px var(--accent-glow);
+    }
+
+    .card-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .card p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+
+    .meta-list {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: #cbd5e1;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .meta-list div {
+      margin-bottom: 4px;
+    }
+
+    .meta-list div:last-child {
+      margin-bottom: 0;
+    }
+
+    .meta-label {
+      color: #64748b;
+      margin-right: 6px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 8px;
+      color: #34d399;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background: #10b981;
+      color: #042f2e;
+    }
+
+    .provenance-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    .provenance-table th,
+    .provenance-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .provenance-table th {
+      background: rgba(0, 0, 0, 0.4);
+      color: #cbd5e1;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+
+    .provenance-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .code-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #38bdf8;
+    }
+
+    .status-verified {
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    .status-unverified {
+      color: #f87171;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      font-size: 12px;
+      color: #475569;
+      border-top: 1px solid var(--card-border);
+      padding-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-bar">
+        <span class="badge badge-emerald">Archify v3.2 Verified</span>
+
+        <span class="badge badge-amber">Read-Only Architectural Audit</span>
+      </div>
+      <h1>GeoScout System Architecture Dossier</h1>
+      <p class="subtitle">
+        A rigorous, code-backed architectural presentation compiled for academic review. Every component, edge, and
+        routing mechanism reflects verified files and implementations in the repository.
+      </p>
+    </header>
+
+    <div class="grid">
+      <!-- Diagram 1 -->
+      <div class="card">
+        <div>
+          <div class="card-num">DIAGRAM 01 &bull; ARCHITECTURE</div>
+          <h2>High-Level System Architecture</h2>
+          <p>
+            Hardware & network boundaries separating the client laptop (Express, MongoDB, MinIO, Python GIS) from remote
+            GPU acceleration (Qwen2.5-VL, SAM 3, DistilBERT) via Cloudflare Zero-Trust tunnels.
+          </p>
+          <div class="meta-list">
+            <div><span class="meta-label">Type:</span> Component Topology</div>
+            <div><span class="meta-label">Key Files:</span> server.js, app.js, minio.js, sam3_model.py</div>
+            <div><span class="meta-label">Trust Boundaries:</span> Localhost LAN vs. WAN TLS vs. Colab CUDA:0</div>
+          </div>
+        </div>
+        <a class="btn" href="01_high_level_architecture.html" target="_blank">Launch Interactive Diagram &rarr;</a>
+      </div>
+
+      <!-- Diagram 2 -->
+      <div class="card">
+        <div>
+          <div class="card-num">DIAGRAM 02 &bull; SEQUENCE</div>
+          <h2>End-to-End Query Lifecycle</h2>
+          <p>
+            Chronological request trace from user image upload and query submission through Multer, MinIO S3, Qwen
+            intent routing, SAM 3 geometric grounding, MongoDB session logging, and SVG rendering.
+          </p>
+          <div class="meta-list">
+            <div><span class="meta-label">Type:</span> Async Request Sequence</div>
+            <div><span class="meta-label">API Routes:</span> POST /api/chat, /api/classify, /api/chat/completion</div>
+            <div><span class="meta-label">Latency:</span> Measured ~5.2s round-trip telemetry</div>
+          </div>
+        </div>
+        <a class="btn" href="02_query_request_flow.html" target="_blank">Launch Interactive Diagram &rarr;</a>
+      </div>
+
+      <!-- Diagram 3 -->
+      <div class="card">
+        <div>
+          <div class="card-num">DIAGRAM 03 &bull; WORKFLOW</div>
+          <h2>Multi-Stage AI Reasoning Pipeline</h2>
+          <p>
+            Stage 1 VLM reasoning (Qwen2.5-VL intent classification), Stage 2 geometric grounding (SAM 3 instance masks,
+            IoB > 0.5 filter, Rotated NMS), and Stage 3 metric conversion (DistilBERT + OpenCV GSD).
+          </p>
+          <div class="meta-list">
+            <div><span class="meta-label">Type:</span> Signal Flow Pipeline</div>
+            <div><span class="meta-label">Models:</span> Qwen2.5-VL 4-bit, SAM 3, DistilBERT Subtype</div>
+            <div><span class="meta-label">Geometry:</span> 8-Point OBBs via cv2.minAreaRect</div>
+          </div>
+        </div>
+        <a class="btn" href="03_ai_pipeline.html" target="_blank">Launch Interactive Diagram &rarr;</a>
+      </div>
+
+      <!-- Diagram 4 -->
+      <div class="card">
+        <div>
+          <div class="card-num">DIAGRAM 04 &bull; ARCHITECTURE</div>
+          <h2>Frontend Architecture & Components</h2>
+          <p>
+            React 19 single-page application structure: App Router, MainChat container, dedicated FloodAnalysisView
+            dashboard, ImageViewer SVG overlay engine, ChatPanel monologue streams, and ModeContext.
+          </p>
+          <div class="meta-list">
+            <div><span class="meta-label">Type:</span> Component Hierarchy</div>
+            <div><span class="meta-label">Core Views:</span> MainChat.jsx, FloodAnalysisView.jsx</div>
+            <div><span class="meta-label">GIS Tools:</span> Pan/Zoom (1x-8x), Compare Slider, GSD Ruler</div>
+          </div>
+        </div>
+        <a class="btn" href="04_frontend_structure.html" target="_blank">Launch Interactive Diagram &rarr;</a>
+      </div>
+
+      <!-- Diagram 5 -->
+      <div class="card">
+        <div>
+          <div class="card-num">DIAGRAM 05 &bull; WORKFLOW</div>
+          <h2>Live Mode vs. Demo Mode Dual Path</h2>
+          <p>
+            Execution bifurcation: Live mode executing real S3 uploads and remote GPU inference vs. Demo mode resolving
+            pre-computed benchmark scenes with prominent academic integrity labeling.
+          </p>
+          <div class="meta-list">
+            <div><span class="meta-label">Type:</span> Decision & Branching Workflow</div>
+            <div><span class="meta-label">Integrity Badge:</span> ChatPanel.jsx line 197</div>
+            <div><span class="meta-label">Offline Store:</span> demoDatasets.js (Zero network calls)</div>
+          </div>
+        </div>
+        <a class="btn" href="05_live_vs_demo_mode.html" target="_blank">Launch Interactive Diagram &rarr;</a>
+      </div>
+
+      <!-- Diagram 6 -->
+      <div class="card">
+        <div>
+          <div class="card-num">DIAGRAM 06 &bull; WORKFLOW</div>
+          <h2>SAR Flood Inundation & Damage Flow</h2>
+          <p>
+            Sentinel-1 C-band SAR specular backscatter extraction (-16.4 dB Otsu thresholding), morphological speckle
+            filtering, 12-parcel cadastral intersection, headline damage metrics, and bilingual Hindi/PDF report.
+          </p>
+          <div class="meta-list">
+            <div><span class="meta-label">Type:</span> Classical GIS Pipeline</div>
+            <div><span class="meta-label">Core Script:</span> sar_flood_analyzer.py (OpenCV / Shapely)</div>
+            <div><span class="meta-label">Deliverables:</span> Bilingual Audit (Hindi/Eng) & GeoJSON</div>
+          </div>
+        </div>
+        <a class="btn" href="06_flood_analysis_flow.html" target="_blank">Launch Interactive Diagram &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Academic Verification & Implementation Ledger -->
+    <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Implementation & Verification Ledger</h2>
+    <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px;">
+      Explicit audit trail disclosing code-backed implementations versus external benchmark citations.
+    </p>
+
+    <table class="provenance-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Implementation File(s)</th>
+          <th>Technique / Architecture</th>
+          <th>Academic Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VLM Reasoning & Classification</td>
+          <td><span class="code-tag">inference/qwen/qwen_model.py</span></td>
+          <td>Qwen2.5-VL with Unsloth 4-bit LoRA (FastVisionModel)</td>
+          <td><span class="status-verified">&#10003; Verified Code</span></td>
+        </tr>
+        <tr>
+          <td>Prompt-Guided Segmentation</td>
+          <td><span class="code-tag">inference/sam3/sam3_model.py</span></td>
+          <td>Transformers Sam3Model + Sam3Processor + IoB filtering</td>
+          <td><span class="status-verified">&#10003; Verified Code</span></td>
+        </tr>
+        <tr>
+          <td>Numeric Subtype Routing</td>
+          <td><span class="code-tag">inference/sam3/classify.py</span></td>
+          <td>DistilBERT sequence classification (bert_model_subtype)</td>
+          <td><span class="status-verified">&#10003; Verified Code</span></td>
+        </tr>
+        <tr>
+          <td>Oriented Bounding Boxes (OBB)</td>
+          <td><span class="code-tag">inference/sam3/sam3_model.py</span></td>
+          <td>OpenCV minAreaRect + 8-point normalization divided by image.size</td>
+          <td><span class="status-verified">&#10003; Verified Code</span></td>
+        </tr>
+        <tr>
+          <td>Radar SAR Flood Inundation</td>
+          <td><span class="code-tag">backend/scripts/sar_flood_analyzer.py</span></td>
+          <td>Otsu bimodal thresholding + morphological speckle filtering</td>
+          <td><span class="status-verified">&#10003; Verified Classical CV</span></td>
+        </tr>
+        <tr>
+          <td>Sen1Floods11 Validation</td>
+          <td><span class="code-tag">backend/routes/flood.js:224</span></td>
+          <td>Cited benchmark dataset (NeurIPS 2020: 76.4% mIoU, 81.2% precision)</td>
+          <td><span class="status-unverified">&#9888; Cited Benchmark (No in-repo DL checkpoint)</span></td>
+        </tr>
+        <tr>
+          <td>Bilingual Audit Report</td>
+          <td><span class="code-tag">frontend/src/components/flood/BilingualReportModal.jsx</span></td>
+          <td>Formal revenue assessment template in Hindi & English with PDF print</td>
+          <td><span class="status-verified">&#10003; Verified Code</span></td>
+        </tr>
+        <tr>
+          <td>Pre-Computed Demo Dataset</td>
+          <td><span class="code-tag">frontend/src/config/demoDatasets.js</span></td>
+          <td>Offline mock store of center-pivot aerial imagery and 19 OBBs</td>
+          <td><span class="status-verified">&#10003; Verified Offline Mode</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <footer>
+      GeoScout Architectural Dossier &bull; Generated via Archify v3.2 &bull; Antigravity Code Assistant
+    </footer>
+  </div>
+</body>
+
+</html>

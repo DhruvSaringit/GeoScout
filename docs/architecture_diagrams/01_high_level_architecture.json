@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "GeoScout - High-Level System Architecture",
+    "output": "docs/architecture_diagrams/01_high_level_architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "React 19 Frontend",
+      "sublabel": "Vite :5173 / TailwindCSS",
+      "pos": [40, 200],
+      "size": [160, 68],
+      "tag": "MainChat.jsx"
+    },
+    {
+      "id": "api_gateway",
+      "type": "backend",
+      "label": "Express API Server",
+      "sublabel": "Node.js :5000 / REST",
+      "pos": [260, 200],
+      "size": [160, 68],
+      "tag": "server.js / app.js"
+    },
+    {
+      "id": "minio_store",
+      "type": "cloud",
+      "label": "MinIO Object Store",
+      "sublabel": "S3 Compatible :9000",
+      "pos": [260, 60],
+      "size": [160, 64],
+      "tag": "utils/minio.js"
+    },
+    {
+      "id": "mongo_db",
+      "type": "database",
+      "label": "MongoDB Instance",
+      "sublabel": "Port :27017 / Mongoose",
+      "pos": [260, 340],
+      "size": [160, 64],
+      "tag": "models/chat.js"
+    },
+    {
+      "id": "python_gis",
+      "type": "backend",
+      "label": "Python GIS Engine",
+      "sublabel": "OpenCV / Shapely SAR",
+      "pos": [40, 340],
+      "size": [160, 64],
+      "tag": "sar_flood_analyzer.py"
+    },
+    {
+      "id": "export_engine",
+      "type": "frontend",
+      "label": "Vector Exporter",
+      "sublabel": "GeoJSON / SHP / TIFF",
+      "pos": [40, 60],
+      "size": [160, 64],
+      "tag": "ExportModal.jsx"
+    },
+    {
+      "id": "cloudflare_tunnel",
+      "type": "security",
+      "label": "Cloudflare Tunnel",
+      "sublabel": "trycloudflare.com TLS",
+      "pos": [480, 200],
+      "size": [150, 68],
+      "tag": "Zero-Trust Bridge"
+    },
+    {
+      "id": "qwen_service",
+      "type": "backend",
+      "label": "FastAPI Qwen App",
+      "sublabel": "Python :8000 / Stream",
+      "pos": [690, 110],
+      "size": [160, 68],
+      "tag": "qwen/app.py"
+    },
+    {
+      "id": "qwen_model",
+      "type": "backend",
+      "label": "Qwen2.5-VL 4-bit",
+      "sublabel": "Unsloth / LoRA VLM",
+      "pos": [910, 110],
+      "size": [160, 68],
+      "tag": "qwen_model.py"
+    },
+    {
+      "id": "sam_service",
+      "type": "backend",
+      "label": "FastAPI SAM3 App",
+      "sublabel": "Python :8001 / Infer",
+      "pos": [690, 280],
+      "size": [160, 68],
+      "tag": "sam3/app.py"
+    },
+    {
+      "id": "sam_model",
+      "type": "backend",
+      "label": "SAM 3 Foundation",
+      "sublabel": "Transformers Segmenter",
+      "pos": [910, 240],
+      "size": [160, 64],
+      "tag": "sam3_model.py"
+    },
+    {
+      "id": "distilbert_router",
+      "type": "backend",
+      "label": "DistilBERT Router",
+      "sublabel": "Numeric Sub-Classifier",
+      "pos": [910, 330],
+      "size": [160, 64],
+      "tag": "bert_model_subtype"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Host Machine / Local LAN (Laptop: 192.168.1.8)",
+      "wraps": ["browser", "api_gateway", "minio_store", "mongo_db", "python_gis", "export_engine"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Zero-Trust Public WAN Transport",
+      "wraps": ["cloudflare_tunnel"]
+    },
+    {
+      "kind": "region",
+      "label": "Remote GPU Acceleration Environment (Google Colab / Cloud CUDA:0)",
+      "wraps": ["qwen_service", "qwen_model", "sam_service", "sam_model", "distilbert_router"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1_user_to_api",
+      "from": "browser",
+      "to": "api_gateway",
+      "label": "HTTP :5000 / SSE",
+      "variant": "emphasis"
+    },
+    {
+      "id": "c2_api_to_minio",
+      "from": "api_gateway",
+      "to": "minio_store",
+      "label": "S3 Put/Get",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "c3_api_to_mongo",
+      "from": "api_gateway",
+      "to": "mongo_db",
+      "label": "Mongoose CRUD",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "c4_api_to_gis",
+      "from": "api_gateway",
+      "to": "python_gis",
+      "label": "Child Process / Flood",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "variant": "dashed"
+    },
+    {
+      "id": "c5_browser_export",
+      "from": "browser",
+      "to": "export_engine",
+      "label": "Client Bundle",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "variant": "dashed"
+    },
+    {
+      "id": "c6_api_to_tunnel",
+      "from": "api_gateway",
+      "to": "cloudflare_tunnel",
+      "label": "HTTPS Tunnels",
+      "variant": "emphasis"
+    },
+    {
+      "id": "c7_tunnel_to_qwen",
+      "from": "cloudflare_tunnel",
+      "to": "qwen_service",
+      "label": "/stream & /inference",
+      "fromSide": "right",
+      "toSide": "left",
+      "variant": "emphasis"
+    },
+    {
+      "id": "c8_tunnel_to_sam",
+      "from": "cloudflare_tunnel",
+      "to": "sam_service",
+      "label": "/inference",
+      "fromSide": "right",
+      "toSide": "left",
+      "variant": "emphasis"
+    },
+    {
+      "id": "c9_qwen_srv_to_model",
+      "from": "qwen_service",
+      "to": "qwen_model",
+      "label": "CUDA Forward"
+    },
+    {
+      "id": "c10_sam_srv_to_model",
+      "from": "sam_service",
+      "to": "sam_model",
+      "label": "Prompt Seg"
+    },
+    {
+      "id": "c11_sam_srv_to_bert",
+      "from": "sam_service",
+      "to": "distilbert_router",
+      "label": "Classify Subtype",
+      "fromSide": "bottom",
+      "toSide": "left"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Client & Host Boundary",
+      "items": [
+        "React 19 single-page app runs on port 5173 with Vite",
+        "Express server (server.js / app.js) orchestrates MinIO S3 and MongoDB",
+        "Local Python worker executes SAR flood thresholding without remote GPU dependencies",
+        "ExportModal generates client-side GeoJSON, Shapefiles, and GeoTIFFs"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Zero-Trust Tunnel Bridge",
+      "items": [
+        "Cloudflare quick tunnels bridge laptop localhost to remote GPU notebooks",
+        "Eliminates static public IP requirements and firewall port forwarding",
+        "Dynamically configured via backend/.env (INFERENCE_URL_QWEN and INFERENCE_URL_SAM)"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Remote GPU Acceleration Environment",
+      "items": [
+        "Qwen2.5-VL with Unsloth 4-bit LoRA handles visual reasoning and query classification",
+        "SAM 3 executes zero-shot prompt-guided instance and semantic segmentation",
+        "DistilBERT fine-tuned router categorizes numerical VQA queries (count, area, length)",
+        "Both inference servers operate as standalone FastAPI processes on CUDA:0"
+      ]
+    }
+  ]
+}

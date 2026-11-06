@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "GeoScout - Frontend Architecture & Component Hierarchy",
+    "output": "docs/architecture_diagrams/04_frontend_structure.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "router",
+      "type": "frontend",
+      "label": "App Router",
+      "sublabel": "React-Router v6 / App.jsx",
+      "pos": [40, 240],
+      "size": [150, 68],
+      "tag": "Route Controller"
+    },
+    {
+      "id": "landing_page",
+      "type": "frontend",
+      "label": "Landing Page",
+      "sublabel": "Hero & Mode Launcher",
+      "pos": [240, 70],
+      "size": [160, 64],
+      "tag": "pages/LandingPage.jsx"
+    },
+    {
+      "id": "main_chat",
+      "type": "frontend",
+      "label": "MainChat Shell",
+      "sublabel": "Workspace Container",
+      "pos": [240, 180],
+      "size": [160, 64],
+      "tag": "pages/MainChat.jsx"
+    },
+    {
+      "id": "flood_page",
+      "type": "frontend",
+      "label": "Flood View",
+      "sublabel": "SAR Disaster Dashboard",
+      "pos": [240, 290],
+      "size": [160, 64],
+      "tag": "FloodAnalysisView.jsx"
+    },
+    {
+      "id": "about_page",
+      "type": "frontend",
+      "label": "About & Credits",
+      "sublabel": "ISRO Attribution & Docs",
+      "pos": [240, 400],
+      "size": [160, 64],
+      "tag": "pages/AboutCredits.jsx"
+    },
+    {
+      "id": "top_navbar",
+      "type": "frontend",
+      "label": "TopNavbar",
+      "sublabel": "Mode & GSD Dropdown",
+      "pos": [460, 70],
+      "size": [160, 64],
+      "tag": "TopNavbar.jsx"
+    },
+    {
+      "id": "image_viewer",
+      "type": "frontend",
+      "label": "ImageViewer",
+      "sublabel": "Pan/Zoom & SVG Polygons",
+      "pos": [460, 180],
+      "size": [160, 68],
+      "tag": "ImageViewer.jsx"
+    },
+    {
+      "id": "chat_panel",
+      "type": "frontend",
+      "label": "ChatPanel",
+      "sublabel": "Thinking Monologue & Cards",
+      "pos": [460, 290],
+      "size": [160, 68],
+      "tag": "ChatPanel.jsx"
+    },
+    {
+      "id": "export_modal",
+      "type": "frontend",
+      "label": "ExportModal",
+      "sublabel": "GeoJSON / SHP / TIFF",
+      "pos": [680, 70],
+      "size": [160, 64],
+      "tag": "ExportModal.jsx"
+    },
+    {
+      "id": "bilingual_modal",
+      "type": "frontend",
+      "label": "BilingualReport",
+      "sublabel": "Hindi & English PDF",
+      "pos": [680, 290],
+      "size": [160, 64],
+      "tag": "BilingualReportModal.jsx"
+    },
+    {
+      "id": "mode_context",
+      "type": "frontend",
+      "label": "ModeContext",
+      "sublabel": "Agri / Flood / General",
+      "pos": [900, 70],
+      "size": [160, 68],
+      "tag": "context/ModeContext.jsx"
+    },
+    {
+      "id": "demo_store",
+      "type": "database",
+      "label": "Demo Mock Store",
+      "sublabel": "Pre-computed Datasets",
+      "pos": [900, 290],
+      "size": [160, 68],
+      "tag": "config/demoDatasets.js"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Page Routing & Views Tier",
+      "wraps": ["landing_page", "main_chat", "flood_page", "about_page"]
+    },
+    {
+      "kind": "region",
+      "label": "GIS Interactive Workspace Components (WorkspaceLayout.jsx)",
+      "wraps": ["top_navbar", "image_viewer", "chat_panel", "export_modal", "bilingual_modal"]
+    },
+    {
+      "kind": "region",
+      "label": "Global State & Offline Pre-Computed Mock Store",
+      "wraps": ["mode_context", "demo_store"]
+    }
+  ],
+  "connections": [
+    { "id": "c1_route_chat", "from": "router", "to": "main_chat", "label": "/chat", "variant": "emphasis" },
+    { "id": "c2_route_flood", "from": "router", "to": "flood_page", "label": "/flood", "fromSide": "right", "toSide": "left" },
+    { "id": "c3_route_landing", "from": "router", "to": "landing_page", "label": "/", "fromSide": "top", "toSide": "left" },
+    { "id": "c4_route_about", "from": "router", "to": "about_page", "label": "/about", "fromSide": "bottom", "toSide": "left" },
+    { "id": "c5_chat_nav", "from": "main_chat", "to": "top_navbar", "fromSide": "top", "toSide": "bottom" },
+    { "id": "c6_chat_viewer", "from": "main_chat", "to": "image_viewer", "label": "boxes", "variant": "emphasis" },
+    { "id": "c7_chat_panel", "from": "main_chat", "to": "chat_panel", "fromSide": "bottom", "toSide": "top" },
+    { "id": "c8_panel_export", "from": "chat_panel", "to": "export_modal" },
+    { "id": "c9_flood_report", "from": "flood_page", "to": "bilingual_modal", "label": "audit", "fromSide": "right", "toSide": "left" },
+    { "id": "c10_state_modes", "from": "mode_context", "to": "top_navbar", "label": "theme & GSD" },
+    { "id": "c11_state_demo", "from": "demo_store", "to": "image_viewer", "label": "offline replay", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Dual-Layout Single Page App",
+      "items": [
+        "MainChat renders a full-viewport split pane: left GIS viewport and right conversational stream",
+        "FloodAnalysisView acts as an independent specialized disaster dashboard with SAR layer controls",
+        "LandingPage and AboutCredits provide onboarding, academic context, and architectural attribution"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Interactive GIS Viewport (ImageViewer.jsx)",
+      "items": [
+        "Dynamic SVG vector polygon rendering for oriented bounding boxes",
+        "Infinite wheel zoom (1x to 8x) and canvas pan with smooth sub-pixel tracking",
+        "Before/after comparison split slider for bi-temporal scene inspection"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Mode Architecture & Sensor GSD",
+      "items": [
+        "ModeContext dynamically switches theme, system prompts, prompt pills, and sensor factors",
+        "Agriculture Mode sets default GSD to 0.5 m/px for parcel telemetry",
+        "Flood Mode configures 1.0 m/px for Sentinel-1 C-band SAR backscatter thresholding"
+      ]
+    }
+  ]
+}

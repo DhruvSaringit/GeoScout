@@ -1,0 +1,142 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "GeoScout - Dual-Path Execution: Live vs. Pre-Computed Demo Mode",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "output": "docs/architecture_diagrams/05_live_vs_demo_mode.html"
+  },
+  "lanes": [
+    { "id": "lane_trigger", "label": "Control & Mode Selection" },
+    { "id": "lane_live", "label": "Live Mode (Real Network & GPU Execution)" },
+    { "id": "lane_demo", "label": "Demo Mode (Zero-Backend Mock Store)" },
+    { "id": "lane_ui", "label": "UI Feedback & Academic Integrity" }
+  ],
+  "phases": [
+    { "id": "p1_select", "label": "Mode Selection", "fromCol": 0, "toCol": 1 },
+    { "id": "p2_exec", "label": "Execution & Retrieval", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "p3_display", "label": "Rendering & Integrity Badges", "fromCol": 4, "toCol": 4, "variant": "dashed" }
+  ],
+  "mainPath": ["user_action", "mode_switch", "live_upload", "gpu_compute", "live_telemetry"],
+  "nodes": [
+    {
+      "id": "user_action",
+      "lane": "lane_trigger",
+      "col": 0,
+      "type": "external",
+      "label": "User Action",
+      "sublabel": "Launch or toggle",
+      "width": 120
+    },
+    {
+      "id": "mode_switch",
+      "lane": "lane_trigger",
+      "col": 1,
+      "type": "frontend",
+      "label": "Mode Switcher",
+      "sublabel": "isDemoMode flag",
+      "tag": "ModeContext.jsx",
+      "width": 120
+    },
+    {
+      "id": "live_upload",
+      "lane": "lane_live",
+      "col": 2,
+      "type": "backend",
+      "label": "Live S3 Upload",
+      "sublabel": "POST /api/chat",
+      "tag": "routes/chat.js",
+      "width": 120
+    },
+    {
+      "id": "gpu_compute",
+      "lane": "lane_live",
+      "col": 3,
+      "type": "backend",
+      "label": "Remote GPU API",
+      "sublabel": "Qwen + SAM3",
+      "tag": "trycloudflare.com",
+      "width": 120
+    },
+    {
+      "id": "live_telemetry",
+      "lane": "lane_live",
+      "col": 4,
+      "type": "frontend",
+      "label": "Live Telemetry",
+      "sublabel": "Measured latency",
+      "tag": "ChatPanel.jsx",
+      "width": 120
+    },
+    {
+      "id": "demo_resolver",
+      "lane": "lane_demo",
+      "col": 2,
+      "type": "frontend",
+      "label": "Offline Resolver",
+      "sublabel": "Zero network calls",
+      "tag": "MainChat.jsx",
+      "width": 120
+    },
+    {
+      "id": "precomputed_db",
+      "lane": "lane_demo",
+      "col": 3,
+      "type": "database",
+      "label": "Static Dataset",
+      "sublabel": "Parcels & traces",
+      "tag": "demoDatasets.js",
+      "width": 120
+    },
+    {
+      "id": "badge_display",
+      "lane": "lane_ui",
+      "col": 4,
+      "type": "security",
+      "label": "Integrity Badge",
+      "sublabel": "Demo mode banner",
+      "tag": "ChatPanel line 197",
+      "width": 120
+    }
+  ],
+  "edges": [
+    { "id": "e1_start", "from": "user_action", "to": "mode_switch", "label": "toggle", "variant": "emphasis" },
+    { "id": "e2_live_branch", "from": "mode_switch", "to": "live_upload", "label": "live mode", "variant": "emphasis" },
+    { "id": "e3_live_gpu", "from": "live_upload", "to": "gpu_compute", "label": "tunnels", "variant": "emphasis" },
+    { "id": "e4_live_ui", "from": "gpu_compute", "to": "live_telemetry", "label": "real OBBs", "variant": "emphasis" },
+    { "id": "e5_demo_branch", "from": "mode_switch", "to": "demo_resolver", "label": "demo mode", "variant": "dashed" },
+    { "id": "e6_demo_load", "from": "demo_resolver", "to": "precomputed_db", "label": "read memory", "variant": "dashed" },
+    { "id": "e7_demo_badge", "from": "precomputed_db", "to": "badge_display", "label": "show banner", "variant": "security" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Live Mode (Real Execution)",
+      "items": [
+        "Calls real backend on port 5000 and uploads multi-megabyte scenes to MinIO S3",
+        "Transfers payload across Cloudflare TLS tunnels to Google Colab GPU models",
+        "Dynamically records execution time (e.g., Latency: 5.7s) in MongoDB and chat telemetry"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Demo Mode (Academic Honesty)",
+      "items": [
+        "Operates completely offline with 0 network calls and 0 GPU token consumption",
+        "Loads ground-truth center-pivot irrigation dataset with 19 pre-computed OBBs and thinking traces",
+        "Renders prominent amber badge: 'Demo Mode: Pre-computed results. Live mode calls the real API'"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Seamless Evaluation Switch",
+      "items": [
+        "Allows professors and evaluators to test UI functionality even when Colab GPUs are disconnected",
+        "TopNavbar Live Mode toggle enables instantaneous switching between live APIs and demo replay"
+      ]
+    }
+  ]
+}
+

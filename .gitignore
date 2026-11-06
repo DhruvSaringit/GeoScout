@@ -1,0 +1,41 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Node dependencies
+node_modules/
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+
+# Secrets and environment configurations
+*.env
+.env
+.env.*
+!.env.example
+
+# Logs and runtime artifacts
+*.log
+deployment/minio_tunnel.log
+deployment/minio_url.txt
+
+# Temporary local uploads and scratch scripts
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/read_last_box.js
+backend/read_last_box.py
+
+# OS & IDE artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
