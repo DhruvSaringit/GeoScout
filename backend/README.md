@@ -1,6 +1,6 @@
-# ISRO GeoNLI - Backend
+# GeoScout - Backend API Server
 
-The backend server acts as the orchestrator between the frontend client, the database, and the inference nodes (SAM3 and Qwen).
+The backend server acts as the orchestrator between the frontend client, the database, MinIO object storage, and the inference nodes (SAM 3 and Qwen2.5-VL).
 
 ## API Overview
 

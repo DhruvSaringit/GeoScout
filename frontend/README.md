@@ -1,6 +1,6 @@
-# ISRO GeoNLI - Frontend
+# GeoScout - Frontend Workstation
 
-This is the frontend client for the ISRO GeoNLI application, built with React and Vite. It provides a chat interface for users to interact with our models for inference.
+This is the web client for GeoScout, built with React and Vite. It provides an interactive GIS cockpit for natural-language remote sensing, oriented vector bounding box overlays, and deterministic telemetry.
 
 ## 📂 File Structure
 

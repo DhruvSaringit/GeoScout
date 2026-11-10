@@ -1,8 +1,8 @@
-# ISRO GeoNLI (Geospatial Natural Language Interface)
+# GeoScout: Multi-Modal Geospatial Intelligence Platform
 ## Comprehensive Technical Architecture & Project Analysis
 
-> **Target Audience:** Technical project defense / Academic viva with ISRO / University professors.  
-> **Repository:** Inter-IIT ISRO GeoNLI codebase.  
+> **Target Audience:** Technical project defense / Academic viva with GeoScout / University professors.  
+> **Repository:** GeoScout codebase.  
 > **Author / Analyst:** Antigravity AI Pair Programmer.  
 > **Environment Note:** Analysis performed in read-only mode on the actual codebase.
 
@@ -23,9 +23,9 @@
 ## 1. Project Overview
 
 ### What the Project Does in Simple Words
-**GeoNLI** is an end-to-end Geospatial Natural Language Interface designed for satellite and aerial remote sensing imagery, built for the Inter-IIT Tech Meet / ISRO competition. 
+**GeoScout** is an end-to-end Geospatial Natural Language Interface designed for satellite and aerial remote sensing imagery, built for the GeoScout Tech Meet / GeoScout competition. 
 
-In traditional remote sensing systems, analysts must use complex GIS software (e.g., QGIS, ArcGIS) or write custom computer vision scripts to detect runways, count storage tanks, calculate playground areas, or track ships. **GeoNLI solves this by enabling zero-shot, interactive conversational AI over satellite imagery.** An analyst simply drags and drops a satellite image and types free-form questions in plain English—such as *"Describe this scene"*, *"Is there a swimming pool?"*, *"Count the airplanes"*, *"Locate the storage tanks with oriented bounding boxes"*, or *"What is the area of the green ground track field?"*
+In traditional remote sensing systems, analysts must use complex GIS software (e.g., QGIS, ArcGIS) or write custom computer vision scripts to detect runways, count storage tanks, calculate playground areas, or track ships. **GeoScout solves this by enabling zero-shot, interactive conversational AI over satellite imagery.** An analyst simply drags and drops a satellite image and types free-form questions in plain English—such as *"Describe this scene"*, *"Is there a swimming pool?"*, *"Count the airplanes"*, *"Locate the storage tanks with oriented bounding boxes"*, or *"What is the area of the green ground track field?"*
 
 The system dynamically classifies user intent, routes queries to specialized AI backbones (a 4-bit Vision-Language Model and a Segment Anything / Computer Vision pipeline), and displays answers with interactive reasoning logs, vector bounding box overlays, pan/zoom tools, and session sharing.
 
@@ -49,14 +49,14 @@ The system dynamically classifies user intent, routes queries to specialized AI 
 | **Automatic Chat Titling** | Generating descriptive chat sidebar titles based on image context. | VLM call with task `sidebar_title` (< 5 words) upon image upload. |
 | **Collaboration & Sharing** | Public share links with granular `view` or `edit` permissions. | Crypto random tokens stored in MongoDB with public token lookup route. |
 | **Role-Based Auth & Whitelist** | Secure signup restricted to admin-whitelisted email addresses. | JWT cookies + Bcrypt + MongoDB whitelist flag + Admin Dashboard. |
-| **Competition Evaluation API** | Standardized endpoint `/api/evaluate` matching Inter-IIT benchmark schema. | Multi-query automated evaluation orchestrator in `evaluation.js`. |
+| **Competition Evaluation API** | Standardized endpoint `/api/evaluate` matching GeoScout benchmark schema. | Multi-query automated evaluation orchestrator in `evaluation.js`. |
 
 ---
 
 ## 2. Folder-by-Folder Codebase Tour
 
 ```
-isro_geonli/
+geoscout/
 ├── backend/            # Node.js/Express orchestration API server
 ├── deployment/         # Docker Compose files, entrypoints & shell deployment scripts
 ├── frontend/           # React 19 + Vite + TailwindCSS 4 web client
@@ -101,7 +101,7 @@ isro_geonli/
   - `start-inference-node.sh`: Script dedicated to running on a remote high-VRAM GPU server. Downloads SAM3, DistilBERT, Transformers, and Qwen weights, builds GPU images, and runs them via `docker run --gpus all`.
   - `docker-compose.yml`: Full single-machine multi-container manifest containing 7 services (`mongodb`, `minio`, `minio-init`, `backend`, `frontend`, `inference-qwen`, `inference-sam`).
   - `docker-compose.core.yml`: Lightweight manifest for the web server in distributed mode (runs `mongodb`, `minio`, `minio-init`, `backend`, `frontend`; points to remote GPU host).
-  - `mongo-init.js`: MongoDB replica/database initialization script that pre-seeds the initial administrator (`admin@isro.gov.in`, empty password, role 2, whitelisted).
+  - `mongo-init.js`: MongoDB replica/database initialization script that pre-seeds the initial administrator (`admin@geoscout.org`, empty password, role 2, whitelisted).
   - `mongo-entrypoint.sh`: Container entrypoint that starts `mongod` in the background, executes `mongo-init.js` via `mongosh`, and tails logs.
   - `see-logs.sh`: Quick troubleshooting script to tail backend container logs.
   - `.env.example`: Template for environment variables (`HOST_IP`, `MONGO_ROOT_USER`, `JWT_SECRET`, `MINIO_BUCKET`, etc.).
@@ -425,7 +425,7 @@ flowchart TD
 ```bash
 1-8:   Header printing. Sets ENV_FILE=".env".
 9-18:  IP Detection: Uses 'ip route get 1.1.1.1' or 'hostname -I' to determine machine IP. Fallback: 127.0.0.1.
-20-30: Prompts user for Host IP, MongoDB/MinIO username (default: admin_isro), password (default: secure_password), and MinIO bucket (chat-images).
+20-30: Prompts user for Host IP, MongoDB/MinIO username (default: admin_geoscout), password (default: secure_password), and MinIO bucket (chat-images).
 32:    Generates a cryptographically random 32-byte hexadecimal JWT secret via 'openssl rand -hex 32'.
 34-45: Writes the gathered environment variables to deployment/.env.
 48:    If .env already exists, skips prompts and sources .env directly.
@@ -446,12 +446,12 @@ flowchart TD
 - Lines 73–80: Interactive prompt presenting three deployment options:
   - **Option 1 (Single Machine):** Runs `docker compose -f docker-compose.yml up -d --build`.
   - **Option 2 (Core Only):** Prompts for remote GPU machine IP, Qwen port (3000), and SAM port (8000), appends them to `.env`, and launches `docker-compose.core.yml`.
-  - **Option 3 (Reset):** Runs `docker compose down` on both manifests and forcibly removes lingering inference containers (`isro_qwen`, `isro_sam`).
+  - **Option 3 (Reset):** Runs `docker compose down` on both manifests and forcibly removes lingering inference containers (`geoscout_qwen`, `geoscout_sam`).
 
 #### `deployment/start-inference-node.sh`
 - Lines 1–32: Installs `gdown`, downloads SAM 3, DistilBERT, Transformers, and Qwen weights onto the remote GPU server, and resolves absolute paths.
 - Lines 35–56: Defines `run_if_not_exists()` helper that builds a Docker image and runs a standalone container with `--gpus all`, host port mapping, and host model volume mounting.
-- Lines 60–65: Builds and runs `isro_inference_qwen` on port 3000 and `isro_inference_sam` on port 8000.
+- Lines 60–65: Builds and runs `geoscout_inference_qwen` on port 3000 and `geoscout_inference_sam` on port 8000.
 
 ---
 
@@ -459,13 +459,13 @@ flowchart TD
 
 | Container Name | Base Image | Internal Port | Exposed Host Port | Purpose | GPU Required? |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `isro_mongodb` | `mongo:latest` | 27017 | 27017 | Document store for users and chats | No |
-| `isro_minio` | `minio/minio` | 9000, 9001 | 9000, 9001 | S3-compatible image object storage | No |
-| `isro_minio_init` | `minio/mc` | N/A | None | Initialization job: creates bucket and sets public download policy | No |
-| `isro_backend` | `node:20-alpine` | 5000 | 5000 | Express API & orchestrator | No |
-| `isro_frontend` | `node:20-alpine` | 5173 | 5173 | Vite React UI server | No |
-| `isro_inference_qwen` | `pytorch/...-devel` | 3000 | 3000 | Qwen VLM FastAPI microservice | **Yes (NVIDIA GPU)** |
-| `isro_inference_sam` | `python:3.10-slim` | 8000 | 8000 | SAM 3 + DistilBERT FastAPI microservice | **Yes (NVIDIA GPU)** |
+| `geoscout_mongodb` | `mongo:latest` | 27017 | 27017 | Document store for users and chats | No |
+| `geoscout_minio` | `minio/minio` | 9000, 9001 | 9000, 9001 | S3-compatible image object storage | No |
+| `geoscout_minio_init` | `minio/mc` | N/A | None | Initialization job: creates bucket and sets public download policy | No |
+| `geoscout_backend` | `node:20-alpine` | 5000 | 5000 | Express API & orchestrator | No |
+| `geoscout_frontend` | `node:20-alpine` | 5173 | 5173 | Vite React UI server | No |
+| `geoscout_inference_qwen` | `pytorch/...-devel` | 3000 | 3000 | Qwen VLM FastAPI microservice | **Yes (NVIDIA GPU)** |
+| `geoscout_inference_sam` | `python:3.10-slim` | 8000 | 8000 | SAM 3 + DistilBERT FastAPI microservice | **Yes (NVIDIA GPU)** |
 
 #### Network & GPU Reservation Details:
 - **Internal Communication:** All containers reside on Docker's default bridge network. The backend talks to database and inference containers using internal DNS names:
@@ -545,7 +545,7 @@ flowchart TD
 1. Clone the repository and navigate to deployment:
    ```bash
    git clone <repo-url>
-   cd isro_geonli/deployment
+   cd deployment
    chmod +x *.sh
    ```
 2. Launch the inference node (downloads model weights and starts Qwen + SAM containers):
@@ -564,7 +564,7 @@ flowchart TD
 ##### Part 2: On Your Windows Machine (Core Web Services)
 1. Open **WSL2 (Ubuntu)** or Git Bash:
    ```bash
-   cd isro_geonli/deployment
+   cd deployment
    chmod +x *.sh
    ```
 2. Run the deployment wizard:
@@ -584,8 +584,8 @@ flowchart TD
 6. Access the web interface in your browser:
    - **Frontend UI:** `http://localhost:5173`
    - **Backend API:** `http://localhost:5000`
-   - **MinIO Console:** `http://localhost:9001` (login with `admin_isro` / your password)
-7. Log in with the pre-seeded admin email: `admin@isro.gov.in` (navigate to `/signup` first to register password).
+   - **MinIO Console:** `http://localhost:9001` (login with `admin_geoscout` / your password)
+7. Log in with the pre-seeded admin email: `admin@geoscout.org` (navigate to `/signup` first to register password).
 
 ---
 
@@ -593,7 +593,7 @@ flowchart TD
 1. Ensure NVIDIA Container Toolkit is installed (`nvidia-smi` working inside Docker).
 2. Execute the single-click deploy script:
    ```bash
-   cd isro_geonli/deployment
+   cd deployment
    chmod +x deploy-all.sh
    ./deploy-all.sh
    ```
@@ -664,7 +664,7 @@ During detailed source code inspection, several architectural bottlenecks, imple
 - **Location:** `services/start-services.sh` lines 59–64, `deployment/mongo-init.js` lines 5–10:
   ```javascript
   db.users.insertOne({
-      'email': 'admin@isro.gov.in',
+      'email': 'admin@geoscout.org',
       'password': '',
       'role': 2,
       'isWhitelisted': true
@@ -674,7 +674,7 @@ During detailed source code inspection, several architectural bottlenecks, imple
   ```javascript
   if (user.password) return next(new ErrorHandler("User already exists", 409));
   ```
-  Because the empty string `""` is falsy in JavaScript, anyone who discovers the deployment can visit `/signup`, enter `admin@isro.gov.in`, set their own password, and immediately hijack root administrator access.
+  Because the empty string `""` is falsy in JavaScript, anyone who discovers the deployment can visit `/signup`, enter `admin@geoscout.org`, set their own password, and immediately hijack root administrator access.
 - **Fix:** Seed with a secure hashed bcrypt password or generate a one-time onboarding token.
 
 ---
@@ -703,12 +703,12 @@ During detailed source code inspection, several architectural bottlenecks, imple
 
 ## 8. Comprehensive Viva Examination Preparation
 
-Here are 15 technical questions a professor or ISRO evaluation panel is likely to ask, along with precise answers referencing the codebase.
+Here are 15 technical questions a professor or GeoScout evaluation panel is likely to ask, along with precise answers referencing the codebase.
 
 ---
 
-### Q1: What is the core problem GeoNLI solves, and why not use generic ChatGPT / GPT-4V?
-**Answer:** Remote sensing imagery presents unique challenges: satellite images are nadir (top-down), contain tiny objects with arbitrary orientations (airplanes, ships), and require precise metric spatial calculations (area in $m^2$, boundary lengths). Standard VLMs like GPT-4V only output horizontal axis-aligned bounding boxes (AABBs), hallucinate spatial dimensions, and cannot calculate metric polygon surface areas. GeoNLI combines a domain fine-tuned Vision-Language Model (Qwen-VL) with a Segment Anything 3 backbone and OpenCV geometry engines to produce metric-calibrated Oriented Bounding Boxes (OBBs) and polygon areas.
+### Q1: What is the core problem GeoScout solves, and why not use generic ChatGPT / GPT-4V?
+**Answer:** Remote sensing imagery presents unique challenges: satellite images are nadir (top-down), contain tiny objects with arbitrary orientations (airplanes, ships), and require precise metric spatial calculations (area in $m^2$, boundary lengths). Standard VLMs like GPT-4V only output horizontal axis-aligned bounding boxes (AABBs), hallucinate spatial dimensions, and cannot calculate metric polygon surface areas. GeoScout combines a domain fine-tuned Vision-Language Model (Qwen-VL) with a Segment Anything 3 backbone and OpenCV geometry engines to produce metric-calibrated Oriented Bounding Boxes (OBBs) and polygon areas.
 
 ---
 
@@ -725,7 +725,7 @@ Here are 15 technical questions a professor or ISRO evaluation panel is likely t
 ---
 
 ### Q4: Why are Oriented Bounding Boxes (OBBs) used instead of standard Horizontal Bounding Boxes (AABBs)?
-**Answer:** In satellite and aerial remote sensing, objects (airplanes, ships, sports tracks, bridges) appear at arbitrary rotation angles. A standard horizontal bounding box for a diagonally oriented aircraft or runway encloses large amounts of irrelevant background terrain and overlaps heavily with adjacent objects. GeoNLI uses 8-point OBBs ($x_1, y_1, x_2, y_2, x_3, y_3, x_4, y_4$) calculated via OpenCV `cv2.minAreaRect`, providing tight geometric bounds that reflect true physical orientation.
+**Answer:** In satellite and aerial remote sensing, objects (airplanes, ships, sports tracks, bridges) appear at arbitrary rotation angles. A standard horizontal bounding box for a diagonally oriented aircraft or runway encloses large amounts of irrelevant background terrain and overlaps heavily with adjacent objects. GeoScout uses 8-point OBBs ($x_1, y_1, x_2, y_2, x_3, y_3, x_4, y_4$) calculated via OpenCV `cv2.minAreaRect`, providing tight geometric bounds that reflect true physical orientation.
 
 ---
 
@@ -784,7 +784,7 @@ This serves two purposes:
 
 ### Q11: How does authentication and the whitelist mechanism work?
 **Answer:**
-1. Unlike typical public applications, GeoNLI prevents open registration.
+1. Unlike typical public applications, GeoScout prevents open registration.
 2. In `backend/controllers/auth.js`, during `signup`, the system searches MongoDB for a pre-existing `User` document created by an admin.
 3. If the user does not exist or `isWhitelisted === false`, registration is rejected with *"Please contact your admin"*.
 4. Once verified, the password is encrypted using `bcrypt.hash(password, 10)` and a JWT token is issued as an `httpOnly` cookie.
@@ -801,7 +801,7 @@ This serves two purposes:
 ---
 
 ### Q13: What is the purpose of `backend/controllers/evaluation.js`?
-**Answer:** It implements the official benchmark evaluation endpoint (`/api/evaluate`) for the Inter-IIT competition. Given an image URL and a structured JSON query object containing caption queries, grounding queries, and attribute queries (binary, numeric, semantic), it automates the full inference pipeline and returns the results formatted to the evaluation benchmark specification.
+**Answer:** It implements the official benchmark evaluation endpoint (`/api/evaluate`) for the GeoScout competition. Given an image URL and a structured JSON query object containing caption queries, grounding queries, and attribute queries (binary, numeric, semantic), it automates the full inference pipeline and returns the results formatted to the evaluation benchmark specification.
 
 ---
 

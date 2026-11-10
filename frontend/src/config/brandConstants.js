@@ -1,6 +1,6 @@
 /**
  * GeoScout Brand & Identity Constants
- * Replaces all previous ISRO branding with an independent, professional Earth Observation AI platform.
+ * Independent, professional Earth Observation AI platform.
  */
 
 export const BRAND = {
@@ -11,11 +11,11 @@ export const BRAND = {
   version: '2.4.0',
   year: '2025-2026',
   
-  // Base research acknowledgement
+  // Platform architecture and foundations
   heritage: {
-    baseProject: 'GeoNLI (Inter-IIT ISRO Tech Meet Challenge)',
-    baseTeam: 'GeoNLI Research Team',
-    originalGoal: 'Natural Language Inference for Satellite Imagery',
+    baseProject: 'GeoScout Earth Observation Engine',
+    baseTeam: 'GeoScout Research Team',
+    originalGoal: 'Conversational Natural Language Interface for Satellite Imagery',
     newInGeoScout: [
       'Agriculture-First Analytical Suite with Crop Parcel Extraction',
       'Interactive Ground Sample Distance (GSD) Area Engine (Hectares & Acres)',

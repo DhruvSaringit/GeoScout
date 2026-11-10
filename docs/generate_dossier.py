@@ -282,10 +282,10 @@ def create_document():
     p_meta.add_run("Computer Science & Engineering — Capstone Major Project\n")
     r3 = p_meta.add_run("Base Repository: ")
     r3.bold = True
-    p_meta.add_run("GeoNLI (Inter-IIT Tech Meet / ISRO Problem Statement 65)\n")
+    p_meta.add_run("GeoScout (GeoScout Research Formulation)\n")
     r4 = p_meta.add_run("Evaluation Reference: ")
     r4.bold = True
-    p_meta.add_run("Original GeoNLI Academic Paper (Team 65, attached as reference)\n")
+    p_meta.add_run("Original GeoScout Academic Paper (GeoScout Research, attached as reference)\n")
     r5 = p_meta.add_run("Audit Date: ")
     r5.bold = True
     p_meta.add_run("October 2026\n")
@@ -305,7 +305,7 @@ def create_document():
         ("3. Why Not Just Use a Chatbot or LLM Directly?", "Honest analysis of LLM hallucinations vs. specialized pipelines"),
         ("4. How It Works: The Architecture in Simple Language", "The 'Team of Specialists' analogy and end-to-end dataflow"),
         ("5. Why This Approach and Not Others", "Technical justification for 3 stages, fine-tuning (GSPO, LoRA), and OpenCV"),
-        ("6. What is Original GeoNLI Work and What is New in My Project", "Transparent ledger separating Team 65 research from my engineering"),
+        ("6. What is Original GeoScout Work and What is New in My Project", "Transparent ledger separating GeoScout Research research from my engineering"),
         ("7. Features, One by One", "Exhaustive tour of all 10 application features, inner workings, and limits"),
         ("8. The Agriculture and Flood Use Case, Explained Step by Step", "Worked Punjab SAR flood case study, Otsu thresholding, and telemetry"),
         ("9. Live Mode vs. Demo Mode", "Dual-path architecture, academic integrity banners, and GPU independence"),
@@ -335,7 +335,7 @@ def create_document():
     
     add_p("GeoScout is an intelligent geospatial analysis system that lets anyone upload a satellite or aerial image and ask questions in plain English—such as 'How many circular irrigation fields are here?' or 'What is the total flooded cropland area in hectares?'—and receive instant, pixel-accurate answers, visual boundary maps, and real-world physical measurements.")
     
-    add_p("Built upon the foundational research of the GeoNLI project (developed for the Inter-IIT Tech Meet under an Indian Space Research Organisation / ISRO problem statement by Team 65), GeoScout bridges the massive gap between raw, complex Earth Observation satellite data and human decision-makers. Instead of requiring a team of GIS (Geographic Information Systems) professionals working for days in complicated desktop software, GeoScout delivers answers in five seconds through a modern web browser.")
+    add_p("Built upon the foundational research of the GeoScout project (developed for the Major Project research formulation), GeoScout bridges the massive gap between raw, complex Earth Observation satellite data and human decision-makers. Instead of requiring a team of GIS (Geographic Information Systems) professionals working for days in complicated desktop software, GeoScout delivers answers in five seconds through a modern web browser.")
 
     add_h2("1.1 Who Is It For?")
     add_bullet("Agricultural Officers & Farmers:", "Who need to verify crop parcel boundaries, calculate exact cultivated acreage, and assess flood damage for crop insurance claims without manual field surveys.")
@@ -349,14 +349,14 @@ def create_document():
 
     add_key_idea("GeoScout transforms satellite imagery from an inaccessible grid of colored pixels into actionable physical intelligence (hectares, acres, counts, and vector boundaries) through simple natural language conversation.")
 
-    add_professor_box("\"Professor, GeoScout is a full-stack Earth Observation intelligence platform. It combines a fine-tuned vision-language model for reasoning, a Segment Anything foundation model for sub-pixel boundary tracing, and deterministic geometry to convert satellite pixels into verified real-world hectares. I took the raw Inter-IIT GeoNLI research pipeline and transformed it into a deployable, multi-modal decision-support system featuring live radar flood analytics, bilingual disaster auditing, and GIS vector exports.\"")
+    add_professor_box("\"Professor, GeoScout is a full-stack Earth Observation intelligence platform. It combines a fine-tuned vision-language model for reasoning, a Segment Anything foundation model for sub-pixel boundary tracing, and deterministic geometry to convert satellite pixels into verified real-world hectares. I took the raw foundational research pipeline and transformed it into a deployable, multi-modal decision-support system featuring live radar flood analytics, bilingual disaster auditing, and GIS vector exports.\"")
 
     # =========================================================================
     # SECTION 2: THE PROBLEM BEING SOLVED
     # =========================================================================
     add_h1("2. The Problem Being Solved")
 
-    add_p("Satellites orbiting the Earth capture millions of square kilometers of high-resolution imagery every single day. Government agencies like ISRO, NASA, and the European Space Agency make enormous volumes of optical and radar imagery publicly available. Yet, despite this wealth of data, very little of it can be used directly by the people who need it most.")
+    add_p("Satellites orbiting the Earth capture millions of square kilometers of high-resolution imagery every single day. Government agencies like GeoScout, NASA, and the European Space Agency make enormous volumes of optical and radar imagery publicly available. Yet, despite this wealth of data, very little of it can be used directly by the people who need it most.")
 
     add_h2("2.1 Why Satellite Imagery Is So Hard to Use Today")
     add_bullet("Requirement for Highly Trained Specialists:", "Interpreting overhead imagery requires specialized training in photogrammetry, remote sensing, and spectral bands. Ordinary administrators cannot look at an optical or radar scene and reliably isolate complex patterns.")
@@ -466,10 +466,10 @@ def create_document():
     # =========================================================================
     add_h1("5. Why This Approach and Not Others")
 
-    add_p("The engineering choices in GeoScout were guided by deep experimentation documented in the original GeoNLI paper (Team 65). Every architectural component was selected to overcome documented failures in competing systems.")
+    add_p("The engineering choices in GeoScout were guided by deep experimentation documented in the original GeoScout paper (GeoScout Research). Every architectural component was selected to overcome documented failures in competing systems.")
 
     add_h2("5.1 Why Three Specialized Stages Instead of One Model?")
-    add_p("Prior remote sensing works, such as EarthDial (built on InternVL with Phi-3-mini) and GLaMM, attempted to train single monolithic vision-language models to handle dialogue, bounding boxes, and numeric counts simultaneously. As documented in Section III of the GeoNLI paper, these monolithic models suffer from three fatal flaws:")
+    add_p("Prior remote sensing works, such as EarthDial (built on InternVL with Phi-3-mini) and GLaMM, attempted to train single monolithic vision-language models to handle dialogue, bounding boxes, and numeric counts simultaneously. As documented in Section III of the GeoScout paper, these monolithic models suffer from three fatal flaws:")
     add_bullet("Integer-Only Numeric VQA:", "EarthDial is structurally incapable of predicting floating-point physical numbers (such as 14.82 hectares); it reliably handles only small integer counts.")
     add_bullet("High-Density Grounding Breakdown:", "When a target class contains more than 5 instances in a single scene (e.g., center-pivot fields or parked aircraft), monolithic models miss most instances or output chaotic overlapping boxes.")
     add_bullet("Cross-Task Interference:", "Training language attention heads to optimize both linguistic fluency and sub-pixel edge gradients causes gradient conflict, reducing accuracy across both tasks.")
@@ -483,11 +483,11 @@ def create_document():
     )
 
     add_h2("5.2 Fine-Tuning Methodologies: GSPO, LoRA, and IoU Preference Loss")
-    add_p("The models in GeoScout are not off-the-shelf weights; they were subjected to specialized fine-tuning as detailed in Section VI of the GeoNLI research report:")
+    add_p("The models in GeoScout are not off-the-shelf weights; they were subjected to specialized fine-tuning as detailed in Section VI of the GeoScout research report:")
 
     add_h3("1. Qwen3-VL Reinforcement Learning: GSPO vs. PPO/GRPO")
     add_p("Standard reinforcement learning fine-tuning uses Proximal Policy Optimization (PPO), which requires maintaining four large neural networks simultaneously (Policy, Reference, Reward, and Value/Critic models). PPO is computationally prohibitive and unstable for remote sensing.")
-    add_p("DeepSeek-R1 introduced Group Relative Policy Optimization (GRPO), which removes the value model and computes advantages by comparing a group of outputs. However, as noted in the GeoNLI paper (Section VI-A), GRPO suffers from a mathematical mismatch: rewards are assigned at the sequence level, but token clipping occurs at the token level. On long vision-language reasoning tasks, this mismatch causes catastrophic model collapse.")
+    add_p("DeepSeek-R1 introduced Group Relative Policy Optimization (GRPO), which removes the value model and computes advantages by comparing a group of outputs. However, as noted in the GeoScout paper (Section VI-A), GRPO suffers from a mathematical mismatch: rewards are assigned at the sequence level, but token clipping occurs at the token level. On long vision-language reasoning tasks, this mismatch causes catastrophic model collapse.")
     add_p("To solve this, the team implemented Group Sequence Policy Optimization (GSPO), an advanced optimization technique developed by the Qwen team. In GSPO, all tokens in an answer share the same length-normalized sequence-level importance ratio. This eliminates per-token noise and trains Qwen to generate structured reasoning monologues within <REASONING> tags and concise answers within <SOLUTION> tags.")
 
     add_h3("2. SAM 3 Adaptation via LoRA (Low-Rank Adaptation)")
@@ -498,7 +498,7 @@ def create_document():
     add_h3("3. The Hybrid IoU Preference Loss (L_RL)")
     add_p("Standard segmentation training uses Supervised Loss (Dice Loss + Binary Cross Entropy):")
     add_p("L_sup = lambda_dice * L_Dice + lambda_bce * L_BCE", italic=True)
-    add_p("However, supervised loss alone optimizes only the single 'best' mask index. In satellite imagery, SAM 3 produces multiple candidate masks, and standard models often assign higher probability scores to inferior masks. To fix this, Team 65 introduced an RL-based IoU Preference Loss inspired by GRPO. For G candidate masks, the reward R_i is the Intersection-over-Union with ground truth, and masks with positive advantage (higher IoU than group average) have their probabilities reinforced.")
+    add_p("However, supervised loss alone optimizes only the single 'best' mask index. In satellite imagery, SAM 3 produces multiple candidate masks, and standard models often assign higher probability scores to inferior masks. To fix this, GeoScout Research introduced an RL-based IoU Preference Loss inspired by GRPO. For G candidate masks, the reward R_i is the Intersection-over-Union with ground truth, and masks with positive advantage (higher IoU than group average) have their probabilities reinforced.")
 
     add_h2("5.3 Design Trade-Offs Summary")
     tradeoff_headers = ["Design Alternative", "Pros", "Cons", "Why GeoScout Chose Our Design"]
@@ -510,15 +510,15 @@ def create_document():
     add_styled_table(tradeoff_headers, tradeoff_rows, [1.5, 1.6, 1.8, 1.6])
 
     # =========================================================================
-    # SECTION 6: ORIGINAL GEONLI WORK VS. WHAT IS NEW IN MY PROJECT
+    # SECTION 6: FOUNDATIONAL WORK VS. WHAT IS NEW IN MY PROJECT
     # =========================================================================
-    add_h1("6. What is Original GeoNLI Work and What is New in My Project")
+    add_h1("6. What is Original GeoScout Work and What is New in My Project")
 
-    add_p("Academic honesty is paramount. When presenting this project to a professor or evaluation committee, you must clearly distinguish between the foundational research created by the Inter-IIT ISRO team (Team 65) and the extensive engineering, features, and algorithms implemented in GeoScout.")
+    add_p("Academic honesty is paramount. When presenting this project to a professor or evaluation committee, you must clearly distinguish between the foundational research created by the foundational research team and the extensive engineering, features, and algorithms implemented in GeoScout.")
 
-    attrib_headers = ["Subsystem / Component", "Original GeoNLI Work (Team 65)", "New Work Added in GeoScout (My Contribution)"]
+    attrib_headers = ["Subsystem / Component", "Original GeoScout Work (GeoScout Research)", "New Work Added in GeoScout (My Contribution)"]
     attrib_rows = [
-        ["Core Paper & Formulation", "Authored paper: 'GeoNLI: Natural Language Interpretation of Satellite Imagery'", "Studied, operationalized, and deployed the theoretical framework"],
+        ["Core Paper & Formulation", "Authored paper: 'GeoScout: Natural Language Interpretation of Satellite Imagery'", "Studied, operationalized, and deployed the theoretical framework"],
         ["Model Architecture & RL", "Trained Qwen3-VL with GSPO and SAM-3 with LoRA and IoU loss", "Integrated models into dual FastAPI inference servers on Colab GPU"],
         ["Training Datasets", "Curated 30,000 remote sensing points (GAIA, RESISC, EarthDial, DOTA)", "Created clean mock evaluation datasets (demoDatasets.js)"],
         ["Web User Interface", "Basic demonstration prototype (demo.webm)", "Complete ground-up redesign: React 19, TailwindCSS, modern GIS dual-pane layout"],
@@ -534,7 +534,7 @@ def create_document():
     ]
     add_styled_table(attrib_headers, attrib_rows, [1.6, 2.4, 2.5])
 
-    add_professor_box("\"Professor, I want to be 100% transparent about what is mine and what came from the research team. The underlying AI model weights—the Qwen vision model fine-tuned with GSPO and SAM 3 fine-tuned with LoRA on 30,000 satellite images—were developed by the Inter-IIT ISRO Team 65, as documented in their research paper. What I built is the entire operational software platform: the React 19 GIS workspace, the multi-sensor mode architecture, the bi-temporal radar SAR flood inundation analyzer, the cadastral damage table, the bilingual Hindi disaster audit report, the GIS vector exporters, and the offline demo mode for evaluation without GPUs.\"")
+    add_professor_box("\"Professor, I want to be 100% transparent about what is mine and what came from the research team. The underlying AI model weights—the Qwen vision model fine-tuned with GSPO and SAM 3 fine-tuned with LoRA on 30,000 satellite images—were developed by the research team, as documented in their research paper. What I built is the entire operational software platform: the React 19 GIS workspace, the multi-sensor mode architecture, the bi-temporal radar SAR flood inundation analyzer, the cadastral damage table, the bilingual Hindi disaster audit report, the GIS vector exporters, and the offline demo mode for evaluation without GPUs.\"")
 
     # =========================================================================
     # SECTION 7: FEATURES, ONE BY ONE
@@ -682,29 +682,29 @@ def create_document():
     # =========================================================================
     add_h1("10. Results and Validation")
 
-    add_p("The foundational AI models utilized in GeoScout were evaluated across standard remote sensing benchmarks in the original GeoNLI paper (Team 65). This section presents the empirical validation results.")
+    add_p("The foundational AI models utilized in GeoScout were evaluated across standard remote sensing benchmarks in the original GeoScout paper (GeoScout Research). This section presents the empirical validation results.")
 
     add_h2("10.1 Captioning & Visual Question Answering on VRSBench")
-    add_p("VRSBench (Visual Remote Sensing Benchmark) is a rigorous academic benchmark designed to test multi-task vision-language models on overhead satellite imagery. The table below reproduces the official results from Table III of the GeoNLI research report:")
+    add_p("VRSBench (Visual Remote Sensing Benchmark) is a rigorous academic benchmark designed to test multi-task vision-language models on overhead satellite imagery. The table below reproduces the official results from Table III of the GeoScout research report:")
     vrs_headers = ["Model Architecture", "Captioning (BERT-BLEU4)", "Boolean VQA (Accuracy)", "Numeric VQA (Relative Error)", "Semantic VQA (Accuracy)"]
     vrs_rows = [
         ["EarthDial (Base)", "― (Not reported)", "0.9600", "0.5600", "― (Not reported)"],
         ["EarthDial (VRSBench Fine-Tuned)", "0.8400", "0.8900", "0.5300", "0.7200"],
         ["LLaVA 1.5 (Remote Sensing Fine-Tuned)", "0.9737", "0.5200", "0.3500", "0.6800"],
         ["Qwen3-VL RL Tuned (VRSBench Only)", "0.9888", "0.7676", "0.5570", "0.7443"],
-        ["Qwen3-VL RL Tuned (GeoNLI Curated Corpus)", "―", "0.8100", "0.3600", "0.9200"]
+        ["Qwen3-VL RL Tuned (GeoScout Curated Corpus)", "―", "0.8100", "0.3600", "0.9200"]
     ]
     add_styled_table(vrs_headers, vrs_rows, [1.8, 1.2, 1.1, 1.2, 1.2])
 
     add_h2("10.2 Visual Grounding Evaluation on VRSBench")
-    add_p("Visual grounding performance was evaluated using Mean Intersection-over-Union (mIoU) on detected bounding boxes, incorporating a count penalty for missed or hallucinated instances (Table IV of the GeoNLI paper):")
+    add_p("Visual grounding performance was evaluated using Mean Intersection-over-Union (mIoU) on detected bounding boxes, incorporating a count penalty for missed or hallucinated instances (Table IV of the GeoScout paper):")
     ground_headers = ["Model Evaluated", "Fine-Tuning Scope", "Grounding Accuracy (mIoU)"]
     ground_rows = [
         ["GeoPixel", "Base pre-trained weights", "0.2100"],
         ["Moondream 3", "Base pre-trained weights", "0.2900"],
         ["SAM 3 (Base)", "Zero-shot concept segmentation", "0.3300"],
         ["EarthDial", "Fine-tuned on VRSBench trainset", "0.3800"],
-        ["SAM 3 (GeoNLI Fine-Tuned)", "Fine-tuned on 30,000 Curated Remote Sensing Corpus", "0.6100 (State-of-the-Art)"]
+        ["SAM 3 (GeoScout Fine-Tuned)", "Fine-tuned on 30,000 Curated Remote Sensing Corpus", "0.6100 (State-of-the-Art)"]
     ]
     add_styled_table(ground_headers, ground_rows, [1.8, 2.7, 2.0])
 
@@ -737,8 +737,8 @@ def create_document():
     add_p("1. Start Databases: Run docker compose -f deployment/docker-compose.core.yml up -d to spin up MongoDB (port 27017) and MinIO (port 9000).")
     add_p("2. Start GPU Inference on Google Colab: Open the inference notebook, start the Qwen service (uvicorn app:app --port 8000) and SAM 3 service (uvicorn app:app --port 8001), and launch cloudflared tunnels.")
     add_p("3. Configure Tunnels: Copy the two generated trycloudflare.com URLs into backend/.env (INFERENCE_URL_QWEN and INFERENCE_URL_SAM).")
-    add_p("4. Start Backend Server: In isro_geonli/backend, execute node server.js (runs on port 5000).")
-    add_p("5. Start Frontend UI: In isro_geonli/frontend, execute npm run dev (runs on port 5173).")
+    add_p("4. Start Backend Server: In backend, execute node server.js (runs on port 5000).")
+    add_p("5. Start Frontend UI: In frontend, execute npm run dev (runs on port 5173).")
     add_p("6. Access the Application: Open http://localhost:5173/ in Google Chrome or Microsoft Edge.")
 
     # =========================================================================
@@ -753,8 +753,8 @@ def create_document():
 
     add_h2("13.2 Long-Term Research Extensions")
     add_bullet("Edge Quantization (4-Bit SAM 3):", "Quantize SAM 3 down to 4-bit INT4 representation to enable real-time instance segmentation directly on consumer laptops and edge drones.")
-    add_bullet("Deep Bi-Temporal SAR Change Detection:", "Train deep Siamese neural networks incorporating Kolmogorov-Arnold Network (KAN) autoencoders (as proposed in GeoNLI Appendix C) to replace classical Otsu thresholding.")
-    add_bullet("Direct Satellite API Streaming:", "Integrate open APIs from ISRO Bhuvan, Sentinel Hub, and Planet Labs for real-time orbital monitoring without manual image downloads.")
+    add_bullet("Deep Bi-Temporal SAR Change Detection:", "Train deep Siamese neural networks incorporating Kolmogorov-Arnold Network (KAN) autoencoders (as proposed in GeoScout Appendix C) to replace classical Otsu thresholding.")
+    add_bullet("Direct Satellite API Streaming:", "Integrate open APIs from open satellite portals, Sentinel Hub, and Planet Labs for real-time orbital monitoring without manual image downloads.")
 
     # =========================================================================
     # SECTION 14: PRESENTATION HELP
@@ -763,7 +763,7 @@ def create_document():
 
     add_h2("14.1 The 10-Minute Presentation Script (Slide by Slide)")
     slides = [
-        ("Slide 1: Title & Overview", "Introduce GeoScout as an intelligent natural language Earth observation platform built on the Inter-IIT ISRO GeoNLI foundation."),
+        ("Slide 1: Title & Overview", "Introduce GeoScout as an intelligent natural language Earth observation platform built on the GeoScout foundation."),
         ("Slide 2: The Problem", "Explain why satellite imagery is trapped in complex GIS software and pixels rather than real-world hectares."),
         ("Slide 3: Why Not ChatGPT?", "Show why plain LLMs hallucinate counts and cannot draw pixel-accurate oriented bounding boxes (OBBs)."),
         ("Slide 4: System Architecture", "Walk through the 'Team of Specialists' analogy using Figure 1 (laptop host vs. Colab GPU acceleration)."),
@@ -783,12 +783,12 @@ def create_document():
         p.add_run(s_script)
 
     add_h2("14.2 The 2-Minute Rapid Pitch")
-    add_p("\"Good morning. Today, satellites take millions of high-resolution photos of Earth, but interpreting them requires expensive GIS software and hours of manual tracing. GeoScout solves this by letting anyone ask questions in plain English—like 'How much cropland is flooded?'—and getting answers in five seconds with pixel-accurate boundaries and exact physical hectares. Built on the Inter-IIT ISRO GeoNLI research pipeline, we use Qwen2.5-VL for intent reasoning, SAM 3 for zero-shot concept segmentation, and OpenCV geometry for deterministic pixel-to-hectare scaling. We added an all-weather radar SAR flood engine, an official bilingual Hindi/English disaster report generator, and GIS vector exports. Thank you.\"")
+    add_p("\"Good morning. Today, satellites take millions of high-resolution photos of Earth, but interpreting them requires expensive GIS software and hours of manual tracing. GeoScout solves this by letting anyone ask questions in plain English—like 'How much cropland is flooded?'—and getting answers in five seconds with pixel-accurate boundaries and exact physical hectares. Built on the GeoScout research pipeline, we use Qwen2.5-VL for intent reasoning, SAM 3 for zero-shot concept segmentation, and OpenCV geometry for deterministic pixel-to-hectare scaling. We added an all-weather radar SAR flood engine, an official bilingual Hindi/English disaster report generator, and GIS vector exports. Thank you.\"")
 
     add_h2("14.3 Top 10 Professor Questions & Model Answers")
     qa_list = [
         ("Q1: Why not just use ChatGPT or GPT-4o?", "GPT-4o hallucinates dense object counts, cannot produce pixel-accurate oriented masks, and has no concept of Ground Sample Distance to calculate true physical hectares."),
-        ("Q2: What is YOUR contribution versus the Inter-IIT team?", "Team 65 developed the core models and paper. I designed the entire operational full-stack platform: the React 19 GIS workspace, radar SAR flood engine, cadastral damage table, bilingual Hindi report, and offline demo mode."),
+        ("Q2: What is YOUR contribution versus the research baseline?", "GeoScout Research developed the core models and paper. I designed the entire operational full-stack platform: the React 19 GIS workspace, radar SAR flood engine, cadastral damage table, bilingual Hindi report, and offline demo mode."),
         ("Q3: Isn't this just stitching existing models together?", "No. Connecting models naively produces chaotic overlapping boxes. We implemented GSPO intent routing, cross-modal IoB filtering (>0.5), rotated NMS, sub-pixel normalization, and GSD scaling."),
         ("Q4: How do you know the physical hectare numbers are accurate?", "Calculators don't hallucinate. OpenCV deterministically counts non-zero mask pixels using Green's theorem and multiplies by the sensor's quadratic GSD factor."),
         ("Q5: What happens if an image is covered in clouds?", "In Flood Mode, we switch to Sentinel-1 Synthetic Aperture Radar (SAR), which penetrates clouds and darkness completely."),
@@ -893,7 +893,7 @@ def create_document():
 
     add_h2("16.2 Academic References & Citations")
     refs = [
-        "[1] Team 65, 'GeoNLI: Natural Language Interpretation of Satellite Imagery', Inter-IIT Tech Meet / ISRO Problem Statement, 2025. (Attached as foundational reference document).",
+        "[1] GeoScout Research, 'GeoScout: Natural Language Interpretation of Satellite Imagery', GeoScout Research Formulation, 2025. (Attached as foundational reference document).",
         "[2] N. Carion, L. Gustafson, et al., 'SAM 3: Segment Anything with Concepts', arXiv:2511.16719, 2025.",
         "[3] S. Bai, Y. Cai, et al., 'Qwen3-VL Technical Report', arXiv:2511.21631, 2025.",
         "[4] C. Zheng, S. Liu, et al., 'Group Sequence Policy Optimization (GSPO)', arXiv:2507.18071, 2025.",

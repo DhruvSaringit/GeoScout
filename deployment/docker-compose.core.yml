@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:latest
-    container_name: isro_mongodb
+    container_name: geoscout_mongodb
     ports:
       - "27017:27017"
     environment:
@@ -17,7 +17,7 @@ services:
 
   minio:
     image: cgr.dev/chainguard/minio
-    container_name: isro_minio
+    container_name: geoscout_minio
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
@@ -30,7 +30,7 @@ services:
   
   minio-init:
     image: cgr.dev/chainguard/minio-client
-    container_name: isro_minio_init
+    container_name: geoscout_minio_init
     depends_on:
       - minio
     environment:
@@ -58,7 +58,7 @@ services:
 
   backend:
     build: ../backend
-    container_name: isro_backend
+    container_name: geoscout_backend
     ports:
       - "5000:5000"
     environment:
@@ -81,7 +81,7 @@ services:
 
   frontend:
     build: ../frontend
-    container_name: isro_frontend
+    container_name: geoscout_frontend
     ports:
       - "5173:5173"
     environment:

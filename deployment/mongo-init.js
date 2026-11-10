@@ -1,9 +1,9 @@
-db = db.getSiblingDB('inter_iit');
+db = db.getSiblingDB(process.env.MONGO_TARGET_DB || 'geoscout_db');
 
 if (db.getCollection('users').countDocuments() === 0) {
     db.createCollection('users');
     db.users.insertOne({
-        'email': 'admin@isro.gov.in',
+        'email': 'admin@geoscout.org',
         'password': '',
         'role': 2,
         'isWhitelisted': true

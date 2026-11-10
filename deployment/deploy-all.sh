@@ -3,7 +3,7 @@
 ENV_FILE=".env"
 
 echo "=================================================="
-echo "   ISRO GeoNLI Single-Click Deployment"
+echo "   GeoScout Single-Click Deployment"
 echo "=================================================="
 
 if [ ! -f "$ENV_FILE" ]; then
@@ -20,8 +20,8 @@ if [ ! -f "$ENV_FILE" ]; then
     read -p "Enter Host IP (Default: $DETECTED_IP): " HOST_IP
     HOST_IP=${HOST_IP:-$DETECTED_IP}
     
-    read -p "Enter MongoDB/Minio Username (Default: admin_isro): " USERNAME
-    USERNAME=${USERNAME:-admin_isro}
+    read -p "Enter MongoDB/Minio Username (Default: admin_geoscout): " USERNAME
+    USERNAME=${USERNAME:-admin_geoscout}
     
     read -p "Enter MongoDB/Minio Password (Default: secure_password): " PASSWORD
     PASSWORD=${PASSWORD:-secure_password}
@@ -35,7 +35,7 @@ if [ ! -f "$ENV_FILE" ]; then
 HOST_IP=$HOST_IP
 MONGO_ROOT_USER=$USERNAME
 MONGO_ROOT_PASSWORD=$PASSWORD
-MONGO_TARGET_DB=inter_iit
+MONGO_TARGET_DB=geoscout_db
 JWT_SECRET=$JWT_SECRET
 MINIO_ROOT_USER=$USERNAME
 MINIO_ROOT_PASSWORD=$PASSWORD

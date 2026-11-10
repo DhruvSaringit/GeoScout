@@ -30,7 +30,7 @@ app.post("/api/classify", tryCatch(async (req, res) => {
     const query = req.body.query || "";
     console.log("Received classify request for:", query);
 
-    // Rule-based classification matching ISRO pipeline specification
+    // Rule-based classification matching GeoScout multi-task routing specification
     const classifyLocally = (q) => {
         // Strip emojis and leading icons from query
         const cleanQ = q.replace(/^[\s\p{Emoji}\p{Symbol}]+/u, '').trim();

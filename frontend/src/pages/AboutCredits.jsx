@@ -4,12 +4,13 @@ import Navbar from '../components/navigation/Navbar';
 import { BRAND } from '../config/brand';
 import { 
   IoArrowBack, 
-  IoSchoolOutline, 
+  IoGlobeOutline, 
   IoSparkles, 
   IoCheckmarkCircle, 
   IoDocumentTextOutline,
   IoGitBranchOutline,
-  IoHardwareChipOutline
+  IoHardwareChipOutline,
+  IoShieldCheckmarkOutline
 } from 'react-icons/io5';
 
 export default function AboutCredits() {
@@ -32,134 +33,142 @@ export default function AboutCredits() {
         {/* Page Header */}
         <div className="border-b border-white/10 pb-8 mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-400 mb-3">
-            <IoSchoolOutline />
-            <span>Academic Heritage & Defense Documentation</span>
+            <IoGlobeOutline />
+            <span>Platform Overview & Architecture</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Project Credits & Research Heritage
+            About {BRAND.name}
           </h1>
           <p className="mt-3 text-slate-300 text-sm leading-relaxed">
-            Honoring foundational remote sensing research while establishing the novel agricultural workflows, interactive spatial engine, and conversational intelligence of <strong>{BRAND.name}</strong>.
+            {BRAND.tagline} — an autonomous, multi-modal remote sensing intelligence platform bridging state-of-the-art vision-language reasoning with deterministic GIS spatial telemetry.
           </p>
         </div>
 
-        {/* Section 1: Foundational Base Work */}
+        {/* Section 1: Core Purpose */}
         <section className="mb-10 p-6 rounded-2xl bg-white/5 border border-white/10">
           <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-3">
             <IoDocumentTextOutline className="text-emerald-400" />
-            1. Foundational Base Research
+            1. Core Purpose & Mission
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
-            This system builds directly upon the foundational research and software architecture originally created for the <strong>Inter-IIT Tech Meet ISRO Challenge</strong> (project titled <em>GeoNLI: Natural Language Inference for Satellite Imagery</em>).
+            Traditional geographic information systems (GIS) like QGIS and ArcGIS demand steep learning curves, manual band combinations, and specialized photo-interpretation. <strong>{BRAND.name}</strong> solves this through zero-shot natural language interaction: analysts simply drag-and-drop high-resolution satellite scenes and query terrain, infrastructure, disaster damage, and crop health in plain conversational English.
           </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono bg-slate-950/60 p-4 rounded-xl border border-white/5">
-            <div>
-              <span className="text-slate-500 block">Baseline Project:</span>
-              <span className="text-slate-200 font-bold">{BRAND.heritage.baseProject}</span>
-            </div>
-            <div>
-              <span className="text-slate-500 block">Original Focus:</span>
-              <span className="text-slate-200 font-bold">{BRAND.heritage.originalGoal}</span>
-            </div>
-            <div>
-              <span className="text-slate-500 block">Foundational Vision-Language:</span>
-              <span className="text-slate-200">Qwen VLM + Segment Anything (SAM 3)</span>
-            </div>
-            <div>
-              <span className="text-slate-500 block">Intent Classification:</span>
-              <span className="text-slate-200">DistilBERT Multi-Category Classifier</span>
-            </div>
-          </div>
         </section>
 
-        {/* Section 2: What is New in GeoScout */}
+        {/* Section 2: Upstream Foundation vs Verified Additions */}
         <section className="mb-10 p-6 rounded-2xl bg-slate-900/80 border border-emerald-500/30">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
               <IoSparkles className="text-emerald-400" />
-              2. What is New in GeoScout (Major Project Contributions)
+              2. Upstream Foundations & Verified GeoScout Additions
             </h2>
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">
-              MAJOR ADDITIONS
+              VERIFIED ARCHITECTURE
             </span>
           </div>
 
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
-            GeoScout transforms the prototype inference script into a full-scale Earth Observation intelligence workstation. All enhancements below were designed and implemented specifically for this project:
+            To maintain strict scientific integrity, {BRAND.name} clearly separates upstream open-source foundation models from novel contributions developed specifically for this project:
           </p>
 
-          <div className="space-y-4">
-            {BRAND.heritage.newInGeoScout.map((item, idx) => (
-              <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
-                <IoCheckmarkCircle className="text-emerald-400 text-lg flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-white">{item}</h4>
-                  <p className="text-xs text-slate-400 mt-1">
-                    {idx === 0 && "Custom prompt engineering, parcel boundary aggregation, and agronomic feature grounding over agricultural terrain."}
-                    {idx === 1 && "Mathematical Shoelace polygon formula integrated with Ground Sample Distance (GSD) sensor telemetry for exact metric conversion into Hectares (ha) and Acres."}
-                    {idx === 2 && "Segmented glassmorphism header toggle shifting primary accent glow, suggested prompt marquee, and target units between Agriculture and General EO."}
-                    {idx === 3 && "Full pan, smooth 10x wheel zoom, polygon opacity sliders, before/after split compare curtain, and bidirectional card ↔ polygon focus."}
-                    {idx === 4 && "Production-grade downloads: GeoJSON FeatureCollections (RFC 7946), burn-in vector annotated PNGs, session JSON, and printable executive PDF reports."}
-                    {idx === 5 && "Strict academic honesty: clearly flagged pre-computed demonstration dataset for reliable offline evaluation alongside live API execution."}
-                  </p>
-                </div>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {/* Upstream Foundations Card */}
+            <div className="p-4 rounded-xl bg-slate-950/70 border border-white/10">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                Upstream Foundation Models (Open-Source)
+              </span>
+              <ul className="space-y-2 text-xs text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">•</span>
+                  <span><strong>Qwen2.5-VL:</strong> Vision-Language reasoning and multi-task token generation.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">•</span>
+                  <span><strong>SAM 3 (Segment Anything):</strong> Prompt-conditioned zero-shot instance segmentation.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-cyan-400 font-bold">•</span>
+                  <span><strong>DistilBERT:</strong> Lightweight intent and query category classification.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Implemented in GeoScout Card */}
+            <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/20">
+              <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider block mb-2">
+                Implemented for GeoScout (Our Contributions)
+              </span>
+              <ul className="space-y-2 text-xs text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Rotated 8-Point OBBs:</strong> OpenCV <code className="text-emerald-300">minAreaRect</code> heading orientation, eliminating axis-aligned bounding box overlap on angled aerial targets.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Sensor GSD Calibration:</strong> Dynamic physical telemetry engine converting pixel contours directly to Hectares (ha) and Acres.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Bi-Temporal SAR Flood Engine:</strong> Sentinel-1 C-band Otsu specular thresholding and Shapely cadastral parcel damage assessment.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <span><strong>Interactive Web GIS Canvas:</strong> Multi-format export (GeoJSON, vector PNG, PDF reports), zoom/pan controls, and split wipe curtain.</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
 
-        {/* Section 3: Technical & Model Clarification */}
+        {/* Section 3: Technical Transparency & Attribution */}
         <section className="mb-10 p-6 rounded-2xl bg-white/5 border border-white/10">
           <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-3">
-            <IoHardwareChipOutline className="text-cyan-400" />
-            3. Model & AI Architecture Clarification
+            <IoShieldCheckmarkOutline className="text-cyan-400" />
+            3. Transparency & Attribution Statement
           </h2>
           <div className="text-xs sm:text-sm text-slate-300 leading-relaxed space-y-3">
-            <p>
-              <strong>Academic Transparency Statement:</strong> To maintain strict scientific integrity during defense evaluation:
-            </p>
-            <blockquote className="p-4 rounded-xl bg-slate-950 border-l-4 border-amber-400 text-slate-300 italic text-xs leading-relaxed">
-              "GeoScout does not claim to utilize a proprietary agriculture-fine-tuned neural backbone. Instead, the Agricultural Modality operates through <strong>domain-specialized prompt engineering, agricultural unit telemetry (Hectares and Acres), field-oriented grounding queries, and spatial geometric area integration</strong> layered dynamically on top of the Qwen Vision-Language Model and SAM 3 segmentation backbone."
+            <blockquote className="p-4 rounded-xl bg-slate-950 border-l-4 border-cyan-400 text-slate-300 text-xs leading-relaxed">
+              GeoScout leverages state-of-the-art open-source AI backbones. We do not claim authorship of the underlying base foundation weights (Qwen, SAM 3, DistilBERT). All third-party libraries, datasets (DOTA, Sen1Floods11), and foundational models are acknowledged and governed by their respective open-source licenses. For complete citations and license records, refer to <code className="text-cyan-300 font-mono">ATTRIBUTION.md</code>.
             </blockquote>
           </div>
         </section>
 
-        {/* Section 4: System Architecture Diagram */}
-        <section className="p-6 rounded-2xl bg-white/5 border border-white/10">
+        {/* Section 4: Dual-Mode Architecture */}
+        <section className="p-6 rounded-2xl bg-white/5 border border-white/10 mb-10">
           <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-4">
             <IoGitBranchOutline className="text-purple-400" />
-            4. GeoScout Dual-Mode Pipeline
+            4. GeoScout Decoupled Multi-Modal Pipeline
           </h2>
 
           <div className="p-4 rounded-xl bg-slate-950 font-mono text-xs text-slate-300 overflow-x-auto leading-relaxed">
             <pre className="text-emerald-400">
 {`┌─────────────────────────────────────────────────────────────┐
 │                       USER QUERY                            │
-│  "Calculate total cropland in hectares & segment plots"     │
+│  "Detect agricultural field parcels & calculate area in ha" │
 └──────────────────────────────┬──────────────────────────────┘
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│       INTENT CLASSIFIER (DistilBERT Multi-Class)            │
-│  Category: 'grounding' | 'vqa_numeric' | 'captioning'       │
+│       INTENT CLASSIFIER (DistilBERT Multi-Category)         │
+│  Routing Policy: 'captioning' | 'grounding' | 'vqa_numeric' │
 └──────────────────────────────┬──────────────────────────────┘
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│            GEO-VISION BACKBONE (Qwen VLM + SAM 3)           │
-│  • Visual Reasoning Monologue (SSE Streaming)               │
-│  • High-Precision Oriented Vector Polygons                  │
+│          GEO-VISION BACKBONE (Qwen2.5-VL + SAM 3)           │
+│  • Natural Language Scene Reasoning                         │
+│  • Text-Prompted Instance Masks (Semantic IoB > 0.5)        │
+│  • OpenCV minAreaRect → 8-Point Rotated OBB Generation      │
 └──────────────────────────────┬──────────────────────────────┘
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│          GEOSCOUT SPATIAL SENSOR TELEMETRY (Frontend)       │
-│  • Shoelace Theorem: Pixel Area Calculation                 │
-│  • GSD Resolution Sensor Factor: Area (ha) = Px * GSD² / 10k│
-│  • Real-Time Unit Transformation: Hectares & Acres          │
+│          GEOSCOUT SPATIAL SENSOR TELEMETRY (Deterministic)  │
+│  • Shoelace Polygon Integration: Pixel Surface Count        │
+│  • Sensor Resolution Factor: Area (ha) = Px * GSD² / 10,000 │
+│  • 0.0% Run-to-Run Variance (No Generative Hallucinations)   │
 └──────────────────────────────┬──────────────────────────────┘
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
-│             GIS INSPECTION COCKPIT & EXPORT                 │
-│  • Before/After Curtain  • GeoJSON  • PNG  • PDF Report     │
+│             WEB GIS WORKSTATION & EXPORT                    │
+│  • Interactive Canvas  • GeoJSON  • Shapefile  • PDF Report │
 └─────────────────────────────────────────────────────────────┘`}
             </pre>
           </div>

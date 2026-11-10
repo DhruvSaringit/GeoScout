@@ -1,4 +1,4 @@
-# ISRO GeoNLI - Inference Engines
+# GeoScout - Inference Engines
 
 This directory contains the Python-based inference servers for the Visual Language Models (VLM) and Segmentation models.
 

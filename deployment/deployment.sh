@@ -5,7 +5,7 @@ PROJECT_ROOT=".."
 ENV_FILE=".env"
 
 echo "=========================================="
-echo "   ISRO GeoNLI Deployment Wizard"
+echo "   GeoScout Deployment Wizard"
 echo "=========================================="
 
 # 1. Gather Configuration
@@ -28,8 +28,8 @@ if [ ! -f "$ENV_FILE" ]; then
     read -p "Enter Host IP (Default: $DETECTED_IP (Detected IP)): " HOST_IP
     HOST_IP=${HOST_IP:-$DETECTED_IP}
     
-    read -p "Enter MongoDB/Minio Username (Default: admin_isro): " USERNAME
-    USERNAME=${USERNAME:-admin_isro}
+    read -p "Enter MongoDB/Minio Username (Default: admin_geoscout): " USERNAME
+    USERNAME=${USERNAME:-admin_geoscout}
     
     read -p "Enter MongoDB/Minio Password (Default: secure_password): " PASSWORD
     PASSWORD=${PASSWORD:-secure_password}
@@ -44,7 +44,7 @@ if [ ! -f "$ENV_FILE" ]; then
 HOST_IP=$HOST_IP
 MONGO_ROOT_USER=$USERNAME
 MONGO_ROOT_PASSWORD=$PASSWORD
-MONGO_TARGET_DB=inter_iit
+MONGO_TARGET_DB=geoscout_db
 JWT_SECRET=$JWT_SECRET
 MINIO_ROOT_USER=$USERNAME
 MINIO_ROOT_PASSWORD=$PASSWORD
@@ -149,7 +149,7 @@ EOF
         docker compose -f docker-compose.yml down
         docker compose -f docker-compose.core.yml down
         # Also try to kill any manual inference containers if they exist locally
-        docker rm -f isro_qwen isro_sam 2>/dev/null
+        docker rm -f geoscout_qwen geoscout_sam 2>/dev/null
         echo "Stopped."
         ;;
     *)

@@ -47,7 +47,7 @@
       "id": "about_page",
       "type": "frontend",
       "label": "About & Credits",
-      "sublabel": "ISRO Attribution & Docs",
+      "sublabel": "Platform Attribution & Docs",
       "pos": [240, 400],
       "size": [160, 64],
       "tag": "pages/AboutCredits.jsx"

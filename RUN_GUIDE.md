@@ -1,4 +1,4 @@
-# ISRO GeoNLI: Hardware Audit & Complete Execution Guide
+# GeoScout: Hardware Audit & Complete Execution Guide
 
 > **Auditor / System:** Antigravity AI Pair Programmer  
 > **Target Machine:** Windows 11 Home, Intel/AMD 20-thread CPU, 16 GB RAM, NVIDIA GeForce RTX 4050 Laptop GPU (6 GB VRAM)  
@@ -51,7 +51,7 @@ An in-depth inspection of `deployment/`, `backend/`, and `inference/` source cod
 
 ### 1. GPU VRAM Requirements by Model
 
-| Model Component | Framework / Quantization in Code | Minimum VRAM | Recommended VRAM | Role in GeoNLI |
+| Model Component | Framework / Quantization in Code | Minimum VRAM | Recommended VRAM | Role in GeoScout |
 | :--- | :--- | :--- | :--- | :--- |
 | **Qwen-VL LoRA** | Unsloth `FastVisionModel`, 4-bit quantized (`load_in_4bit=True`), `max_seq_length=16384` | **5.5 GB** | **8.0 GB** | Intent classification, query transformation, captioning, binary/semantic VQA, streaming CoT reasoning. |
 | **SAM 3 Model** | Hugging Face Transformers custom `Sam3Model` + `Sam3Processor`, standard float16/float32 | **6.5 GB** | **10.0 GB** | Instance segmentation, semantic segmentation, Oriented Bounding Box (OBB) generation. |
@@ -59,7 +59,7 @@ An in-depth inspection of `deployment/`, `backend/`, and `inference/` source cod
 | **TOTAL (Concurrent)** | Both Qwen & SAM 3 must remain loaded in VRAM simultaneously | **12.5 GB – 14.0 GB** | **16.0 GB+** | **Required for full system operation.** |
 
 > [!IMPORTANT]
-> This explains why `isro_geonli/README.md` explicitly mandates:  
+> This explains why `README.md` explicitly mandates:  
 > **"Minimum GPU required: T4 with 15 GB VRAM"**.
 
 ### 2. System RAM & Disk Space Needed
@@ -109,7 +109,7 @@ An in-depth inspection of `deployment/`, `backend/`, and `inference/` source cod
   - `27017`: MongoDB
   - `3000`: Qwen Inference Service
   - `8000`: SAM 3 Inference Service
-- **Critical Variables:** `HOST_IP`, `MONGO_ROOT_USER`, `MONGO_ROOT_PASSWORD`, `MONGO_TARGET_DB` (`inter_iit`), `JWT_SECRET`, `MINIO_BUCKET` (`chat-images`), `VITE_API_BASE_URL`, `INFERENCE_URL_SAM`, `INFERENCE_URL_QWEN`.
+- **Critical Variables:** `HOST_IP`, `MONGO_ROOT_USER`, `MONGO_ROOT_PASSWORD`, `MONGO_TARGET_DB` (`geoscout_db`), `JWT_SECRET`, `MINIO_BUCKET` (`chat-images`), `VITE_API_BASE_URL`, `INFERENCE_URL_SAM`, `INFERENCE_URL_QWEN`.
 
 ---
 
@@ -136,7 +136,7 @@ An in-depth inspection of `deployment/`, `backend/`, and `inference/` source cod
 If you must experiment with running models locally on your 6 GB RTX 4050, the following code changes are required:
 
 #### A. Drastically reduce Qwen KV-Cache allocation
-- **File:** `isro_geonli/inference/qwen/qwen_model.py`
+- **File:** `inference/qwen/qwen_model.py`
 - **Line 13:**
   ```python
   # ORIGINAL:
@@ -147,7 +147,7 @@ If you must experiment with running models locally on your 6 GB RTX 4050, the fo
   ```
 
 #### B. Offload DistilBERT classifier from GPU to CPU
-- **File:** `isro_geonli/inference/sam3/sam3_model.py`
+- **File:** `inference/sam3/sam3_model.py`
 - **Lines 20–21:**
   ```python
   # ORIGINAL:
@@ -160,7 +160,7 @@ If you must experiment with running models locally on your 6 GB RTX 4050, the fo
   ```
 
 #### C. Force SAM 3 to run on CPU
-- **File:** `isro_geonli/inference/sam3/app.py`
+- **File:** `inference/sam3/app.py`
 - **Line 15:**
   ```python
   # ORIGINAL:
@@ -185,8 +185,8 @@ Here are the 4 concrete ways to run the project.
 #### Step 1: On the Remote Cloud GPU Server (Ubuntu Linux with NVIDIA GPU)
 1. Clone the repo and navigate to deployment:
    ```bash
-   git clone https://github.com/DhruvSaringit/IClens.git isro_geonli
-   cd isro_geonli/deployment
+   git clone https://github.com/DhruvSaringit/IClens.git geoscout
+   cd deployment
    chmod +x *.sh
    ```
 2. Start the GPU inference nodes (this automatically downloads Qwen, SAM3, and DistilBERT weights):
@@ -203,7 +203,7 @@ Here are the 4 concrete ways to run the project.
 #### Step 2: On Your Windows Laptop (Running Core Services)
 1. Open **Git Bash** in the workspace:
    ```bash
-   cd "c:/Users/Dhruv Sarin/Downloads/major Project/isro_geonli/deployment"
+   cd "c:/Users/Dhruv Sarin/Downloads/major Project/deployment"
    ```
 2. Run the deployment wizard:
    ```bash
@@ -211,7 +211,7 @@ Here are the 4 concrete ways to run the project.
    ```
 3. When prompted:
    - **Host IP:** Press Enter to accept your detected local IP (or enter your LAN IP).
-   - **Username / Password:** Press Enter to accept defaults (`admin_isro` / `secure_password`).
+   - **Username / Password:** Press Enter to accept defaults (`admin_geoscout` / `secure_password`).
    - **Choice:** Select **`2` (Core Only)**.
    - **Inference Server Host:** Enter `http://<CLOUD_PUBLIC_IP>` (e.g., `http://34.120.45.67`).
    - **Qwen Port:** `3000`
@@ -220,7 +220,7 @@ Here are the 4 concrete ways to run the project.
 5. Open your browser:
    - **Frontend UI:** `http://localhost:5173`
    - **MinIO Console:** `http://localhost:9001`
-6. Click **Sign up**, enter `admin@isro.gov.in`, set a password, and log in.
+6. Click **Sign up**, enter `admin@geoscout.org`, set a password, and log in.
 
 ---
 
@@ -228,14 +228,14 @@ Here are the 4 concrete ways to run the project.
 *Runs 100% on your laptop by forcing SAM 3 to use the CPU and giving the full 6 GB VRAM to Qwen.*
 
 #### Step 1: Apply the Code Edits
-1. In `isro_geonli/inference/qwen/qwen_model.py`, change line 13 to `max_seq_length = 2048`.
-2. In `isro_geonli/inference/sam3/app.py`, change line 15 to `device = "cpu"`.
-3. In `isro_geonli/inference/sam3/sam3_model.py`, change line 21 to `self.bert_model.to("cpu").eval()`.
-4. In `isro_geonli/deployment/docker-compose.yml`, remove the `deploy:` reservation block from `inference-sam` so Docker doesn't attach the GPU to SAM.
+1. In `inference/qwen/qwen_model.py`, change line 13 to `max_seq_length = 2048`.
+2. In `inference/sam3/app.py`, change line 15 to `device = "cpu"`.
+3. In `inference/sam3/sam3_model.py`, change line 21 to `self.bert_model.to("cpu").eval()`.
+4. In `deployment/docker-compose.yml`, remove the `deploy:` reservation block from `inference-sam` so Docker doesn't attach the GPU to SAM.
 
 #### Step 2: Download Weights Manually via Git Bash
 ```bash
-cd "c:/Users/Dhruv Sarin/Downloads/major Project/isro_geonli"
+cd "c:/Users/Dhruv Sarin/Downloads/major Project/geoscout"
 pip install gdown
 
 # 1. SAM3
@@ -266,7 +266,7 @@ cd deployment
 *The codebase contains a built-in `mockInference()` function in `backend/utils/inference.js`. This allows you to demo the entire UI, pan/zoom, vector OBB overlays, chat history, admin dashboard, and sharing **without downloading 12 GB of models or using any GPU**!*
 
 #### Step 1: Switch Backend from Real Inference to Mock Inference
-Edit `isro_geonli/backend/routes/chat.js`:
+Edit `backend/routes/chat.js`:
 - In **Line 12**, change `getGenerateCompletionFunction(inference)` to `getGenerateCompletionFunction(mockInference)`.
 - In **Line 15**, change `getPopulateChatDescriptionFunction(inference)` to `getPopulateChatDescriptionFunction(mockInference)`.
 
@@ -274,21 +274,21 @@ Edit `isro_geonli/backend/routes/chat.js`:
 Run the existing services script or start via Docker:
 ```powershell
 # From Windows PowerShell:
-docker run -d --name isro_mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin_isro -e MONGO_INITDB_ROOT_PASSWORD=secure_password mongo:latest
-docker run -d --name isro_minio -p 9000:9000 -p 9001:9001 -e MINIO_ROOT_USER=admin_isro -e MINIO_ROOT_PASSWORD=secure_password minio/minio server /data --console-address ":9001"
+docker run -d --name geoscout_mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin_geoscout -e MONGO_INITDB_ROOT_PASSWORD=secure_password mongo:latest
+docker run -d --name geoscout_minio -p 9000:9000 -p 9001:9001 -e MINIO_ROOT_USER=admin_geoscout -e MINIO_ROOT_PASSWORD=secure_password minio/minio server /data --console-address ":9001"
 ```
 
 #### Step 3: Run Backend on Windows
 ```powershell
-cd "c:\Users\Dhruv Sarin\Downloads\major Project\isro_geonli\backend"
+cd "c:\Users\Dhruv Sarin\Downloads\major Project\geoscout\backend"
 
 # Create .env file:
 @"
 PORT=5000
 MODE=production
-MONGO_URI=mongodb://admin_isro:secure_password@localhost:27017/inter_iit?authSource=admin
+MONGO_URI=mongodb://admin_geoscout:secure_password@localhost:27017/geoscout_db?authSource=admin
 JWT_SECRET=demo_secret_key_12345
-MINIO_ACCESS_KEY=admin_isro
+MINIO_ACCESS_KEY=admin_geoscout
 MINIO_SECRET_KEY=secure_password
 MINIO_ENDPOINT=localhost
 MINIO_PORT=9000
@@ -302,7 +302,7 @@ node server.js
 
 #### Step 4: Run Frontend on Windows
 ```powershell
-cd "c:\Users\Dhruv Sarin\Downloads\major Project\isro_geonli\frontend"
+cd "c:\Users\Dhruv Sarin\Downloads\major Project\geoscout\frontend"
 
 # Create .env file:
 "VITE_API_BASE_URL=http://localhost:5000/api" | Out-File -Encoding utf8 .env
@@ -330,7 +330,7 @@ npm run dev
 | :--- | :--- | :--- | :--- | :--- |
 | **Option 1: Full Local Single-Machine** | Everything in theory. | Crashes with CUDA Out-of-Memory. Runs out of disk space. | Free | **0% (Infeasible on 6 GB VRAM)** |
 | **Option 2: Hybrid Local (Qwen GPU + SAM CPU)** | Real Qwen captions, real SAM segmentation. | SAM 3 segmentation takes 60–90 seconds per image on CPU. | Free | **65% (Feasible, but slow segmentation)** |
-| **Option 3: Distributed Cloud GPU + Local Web** | 100% of features at maximum speed (< 3s response). | Requires renting a cloud VM or configuring Colab tunnel. | ~$0.30 to $0.80 / hour (RunPod / AWS T4 / Colab Pro) | **100% (The Professional ISRO Setup)** |
+| **Option 3: Distributed Cloud GPU + Local Web** | 100% of features at maximum speed (< 3s response). | Requires renting a cloud VM or configuring Colab tunnel. | ~$0.30 to $0.80 / hour (RunPod / AWS T4 / Colab Pro) | **100% (The Professional GeoScout Setup)** |
 | **Option 4: Zero-GPU Mock Mode** | 100% of UI, MongoDB, MinIO, Auth, SVG overlays, pan/zoom, sharing. | Answers are simulated from the mock pool rather than real weights. | Free | **100% (Instant, zero risk of crash)** |
 
 ---

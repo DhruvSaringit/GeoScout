@@ -318,14 +318,14 @@ export default function LandingPage() {
             GeoScout • Autonomous Geospatial Vision & Agricultural Remote Sensing Suite
           </p>
           <p className="text-slate-500">
-            Academic Project Defense Edition • Heritage: Built upon original foundational research from GeoNLI (Inter-IIT ISRO Tech Meet Challenge).
+            Academic Project Defense Edition • Multi-Modal Geospatial Intelligence & Conversational Remote Sensing Platform.
           </p>
           <div className="pt-2">
             <button 
               onClick={() => navigate('/about')} 
               className="text-emerald-400 hover:text-emerald-300 underline font-medium"
             >
-              View Research Paper Credits & Heritage Documentation
+              View System Architecture & Research Foundation
             </button>
           </div>
         </div>

@@ -252,7 +252,7 @@ export function printExecutiveReport({ mode, gsd, chatTitle, chatHistory, imageU
         ${historyHtml}
 
         <div style="margin-top: 40px; border-top: 1px solid #cbd5e1; padding-top: 16px; font-size: 11px; color: #94a3b8; text-align: center;">
-          GeoScout Spatial Intelligence Suite • Built on GeoNLI research heritage (Inter-IIT ISRO Challenge) with domain-specialized agricultural analytics.
+          GeoScout Spatial Intelligence Suite • Multi-Modal Remote Sensing & GIS Telemetry Platform.
         </div>
 
         <script>

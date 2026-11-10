@@ -1,5 +1,5 @@
 # UI Redesign & Architecture Plan
-**Project:** GeoNLI Modern Frontend Re-architecture  
+**Project:** GeoScout Modern Frontend Re-architecture  
 **Focus:** Agriculture-First Satellite Imagery Analysis & General Remote Sensing Intelligence  
 **Target:** Major Project Defense, Academic Evaluation & Professional Production-grade UI  
 **Author:** Pair Programming Assistant & Frontend Architecture Lead  
@@ -9,19 +9,19 @@
 
 ## Executive Summary & System Philosophy
 
-This plan details the full frontend redesign of the **GeoNLI** geospatial vision-language system. The current frontend is an early-stage prototype using direct ISRO branding and a monolithic layout. The redesigned frontend transforms this into a modern Earth Observation (EO) intelligence application—inspired by industry standards like **Sentinel Hub EO Browser, Felt, Planet Explorer, and modern AI interfaces (ChatGPT/Claude)**.
+This plan details the full frontend redesign of the **GeoScout** geospatial vision-language system. The current frontend is an early-stage prototype using direct GeoScout branding and a monolithic layout. The redesigned frontend transforms this into a modern Earth Observation (EO) intelligence application—inspired by industry standards like **Sentinel Hub EO Browser, Felt, Planet Explorer, and modern AI interfaces (ChatGPT/Claude)**.
 
 ### Core Architectural Principles
 1. **Zero Backend Regression:** The backend, Python microservices (Qwen VLM, SAM 3, DistilBERT), and API contracts remain untouched unless explicitly approved.
 2. **Strict Ground-Truth Integrity:** No model hallucination or simulated results in live mode. Any pre-computed sample mode will be explicitly flagged with an ambient banner: `Demo mode: pre-computed results`.
 3. **Domain Modality:** Agriculture is elevated as the primary headline workflow (field extraction, crop parcel area in hectares/acres, yield/damage tracking), while preserving general satellite intelligence (urban infrastructure, maritime tracking, airports, roads, holistic captioning).
-4. **Academic Transparency:** Dedicated Credits and Project Heritage documentation detailing the transition from the base Inter-IIT ISRO challenge work to this advanced analytical platform.
+4. **Academic Transparency:** Dedicated Credits and Project Heritage documentation detailing the transition from the base GeoScout challenge work to this advanced analytical platform.
 
 ---
 
 ## 1. Product Naming & Brand Identity (Pending User Selection)
 
-To replace all ISRO branding, logos, and government references, here are **5 short, memorable name options** with rationale and taglines:
+To replace all GeoScout branding, logos, and government references, here are **5 short, memorable name options** with rationale and taglines:
 
 | # | Name | Rationale | Tagline |
 |---|---|---|---|
@@ -100,10 +100,10 @@ The application operates in two distinct operational modes sharing the same core
 ### 3.2 Current Folder Structure
 ```
 frontend/
-├── index.html                 # Contains hardcoded ISRO logo favicon & "GeoNLI" title
+├── index.html                 # Contains hardcoded GeoScout logo favicon & "GeoScout" title
 ├── package.json
 ├── src/
-│   ├── assets/                # isro_logo.png, earth_image_2.jpg/png, react.svg
+│   ├── assets/                # earth_image_2.jpg/png, react.svg
 │   ├── components/
 │   │   ├── ChatWindow.jsx     # Monolithic 998-line component handling image, SVG, chat & input
 │   │   ├── ImageUpload.jsx    # Drag and drop upload zone
@@ -115,7 +115,7 @@ frontend/
 │   │   └── AuthContext.jsx    # Session state, user data, login/logout actions
 │   ├── pages/
 │   │   ├── AdminDashboard.jsx # Whitelist management & user role administration
-│   │   ├── Auth.jsx           # Tabbed login/signup screen with ISRO logo
+│   │   ├── Auth.jsx           # Tabbed login/signup screen with GeoScout logo
 │   │   ├── Login.jsx / Signup.jsx
 │   │   ├── MainChat.jsx       # 621-line orchestrator for upload, SSE streaming, and chat
 │   │   ├── SharedChat.jsx     # Public read/write shared chat view
@@ -142,7 +142,7 @@ frontend/
 ### 3.4 Key Limitations in Current Codebase
 1. **Monolithic Components:** `ChatWindow.jsx` (998 lines) and `MainChat.jsx` (621 lines) tightly couple image rendering, mouse events, SVG geometry, chat scrolling, input handling, and network requests. Any UI enhancement risks regressions without modularization.
 2. **Missing Landing Page:** The root URL `/` directs to the Auth page (`Auth.jsx`). A new visitor sees a login box instead of a modern product showcase.
-3. **Hardcoded Branding:** ISRO logo PNG files and text are embedded in `SidebarHeader.jsx`, `Auth.jsx`, `Login.jsx`, `Signup.jsx`, and `index.html`.
+3. **Hardcoded Branding:** GeoScout logo PNG files and text are embedded in `SidebarHeader.jsx`, `Auth.jsx`, `Login.jsx`, `Signup.jsx`, and `index.html`.
 4. **Bounding Box Data Model:** SAM 3 and Qwen currently output oriented bounding boxes (8-coordinate polygons `[x1,y1, x2,y2, x3,y3, x4,y4]` or 5-coordinate boxes `[cx, cy, w, h, angle]`). There are no raster mask overlays, opacity sliders, or object-level toggles in the frontend.
 5. **No Ground Sample Distance (GSD) / Unit Configuration:** The backend accepts an optional `resolution` parameter, but the frontend hardcodes `NaN` or ignores it. Converting raw pixel areas to hectares, acres, or square meters requires an interactive GSD input in the UI.
 
@@ -249,7 +249,7 @@ A dual-pane cockpit layout built for high-density analysis on laptop/desktop and
 4. **Landing Page & Navigation:**
    - **Hero Section:** Bold headline showcasing the product (*"Next-Generation Geospatial Vision for Earth & Agriculture"*), live interactive before/after image demo widget, and a direct `"Launch Workspace (Guest or Sign In)"` CTA.
    - **Feature Showcase:** Grid highlighting zero-shot segmentation, natural language measurements, multi-spectral field analysis, and privacy-first local GPU processing.
-   - **Credits & Heritage Page (`/credits` or `/about`):** Explicitly honors the original research paper and the Inter-IIT Tech Meet ISRO competition team as the baseline foundation, while documenting the new agricultural workflow engine, metric calculation suite, export generator, and modular UI layer.
+   - **Credits & Heritage Page (`/credits` or `/about`):** Explicitly honors the original research paper and the GeoScout Tech Meet GeoScout competition team as the baseline foundation, while documenting the new agricultural workflow engine, metric calculation suite, export generator, and modular UI layer.
    - **Sample Image Gallery:** Instant-load presets with separate tabs:
      - *Agriculture:* Punjab Wheat Fields, Andhra Rice Paddies, California Vineyards.
      - *General:* Delhi International Airport, Mumbai Port Container Terminal, Solar Farm.
@@ -293,7 +293,7 @@ A dual-pane cockpit layout built for high-density analysis on laptop/desktop and
 ---
 
 ### Phase 1: Redesigned UI Shell, Landing Page, Upload, Viewer, Chat Panel
-- **Objective:** Replace ISRO branding, build the modern responsive split-screen shell, create the public Landing page, modularize `ChatWindow.jsx`, and ensure 100% parity with existing API endpoints.
+- **Objective:** Replace GeoScout branding, build the modern responsive split-screen shell, create the public Landing page, modularize `ChatWindow.jsx`, and ensure 100% parity with existing API endpoints.
 - **Files to Create / Modify:**
   - `src/config/brand.js`: Placeholder branding configuration (app name, logo SVG, taglines).
   - `src/pages/LandingPage.jsx`: Public landing page with hero, interactive comparison, feature grid, and "Try it" button.
@@ -303,7 +303,7 @@ A dual-pane cockpit layout built for high-density analysis on laptop/desktop and
   - `src/components/workspace/ChatPanel.jsx`: Chat stream, reasoning accordion, and input box.
   - `src/pages/MainChat.jsx`: Updated to utilize the new modular components.
   - `src/App.jsx`: Updated route definitions (`/` -> `LandingPage`, `/workspace` or `/chat` -> `MainChat`).
-  - `index.html`: Remove ISRO favicon and title, inject modern typography and clean title.
+  - `index.html`: Remove GeoScout favicon and title, inject modern typography and clean title.
 - **Risk / What Could Break:** 
   - SSE streaming event listeners disconnecting during component remounts.
   - CSS layout height clipping in nested flex containers.
@@ -379,7 +379,7 @@ A dual-pane cockpit layout built for high-density analysis on laptop/desktop and
   - `src/demo_outputs/`: Curated directory of pre-computed inference results (Agriculture parcel segmentation, urban building counts, high-resolution reasoning chains).
   - `src/components/workspace/DemoModeBanner.jsx`: Persistent amber notice: `⚡ Demo mode: displaying pre-computed results. Real API calls remain active in Live Mode.`
   - `src/pages/AboutCredits.jsx`: Academic credits page detailing:
-    - Base Research: GeoNLI paper and Inter-IIT ISRO Tech Meet team.
+    - Base Research: GeoScout paper and GeoScout Tech Meet team.
     - New Additions: Agriculture-first analytical engine, metric conversion suite, dual-mode EO architecture, modern interactive GIS canvas, and multi-format reporting.
   - Complete cross-browser visual QA and responsive testing.
 - **Risk / What Could Break:**

@@ -57,7 +57,7 @@ var db = db.getSiblingDB(dbName);
 if (db.getCollection(colName).countDocuments() === 0) {
     db.createCollection(colName);
     db.getCollection(colName).insertOne({
-        'email': 'admin@isro.gov.in',
+        'email': 'admin@geoscout.org',
         'password': '',
         'role': 2,
         'isWhitelisted': true
